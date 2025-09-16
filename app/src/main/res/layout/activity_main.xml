@@ -144,11 +144,13 @@
             android:layout_margin="@dimen/cardview_default_radius"
             android:layout_weight="1"
             android:background="@color/white"
+            android:textColor="@color/white"
             android:backgroundTint="@color/material_dynamic_secondary30"
             android:text="בדיקה"
             android:textSize="30sp">
 
         </Button>
+
 
 
     </LinearLayout>

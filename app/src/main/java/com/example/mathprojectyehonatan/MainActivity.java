@@ -18,7 +18,7 @@ import java.util.Random;
 
 import kotlin.random.URandomKt;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CallBack {
 
 private Button btnetger;
 private Button btncefelad20;
@@ -27,13 +27,14 @@ private TextView whitebox1;
 private TextView whitebox2;
 private EditText tshoova;
 private Button btnbdika;
-private int result;
 private Toast tos;
+private Exercise Ex1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initviews();
+        Ex1 = new Exercise(this);
     }
 
         private void initviews() { //java קישור בין הפקדים לקוד
@@ -51,19 +52,20 @@ private Toast tos;
             btnetger.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Ranint100();
+                Ex1.Ranint100();
                 }
             });
            btncefelad20.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
-                  Ranint();
+
+                   Ex1.Ranint();
                }
            });
             btnloohahacefal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Ranint10();
+                Ex1.Ranint10();
                 }
             });
             btnbdika.setOnClickListener(new View.OnClickListener() {
@@ -73,34 +75,10 @@ private Toast tos;
                 }
             });
         }
-        public void Ranint() { //מספר רנדומלי 0 עד 20
-            Random rr = new Random();
-            int num1 = rr.nextInt(9);
-            int num2 = rr.nextInt(20);
-             result = num1*num2;
-            ShowVi(num1,num2);
-        }
-        public void Ranint10() { //מספר רנדומאלי בין 0 ל9
-            Random rr = new Random();
-            int num1 = rr.nextInt(9);
-            int num2 = rr.nextInt(9);
-             result = num1*num2;
-            ShowVi(num1,num2);
-        }
-        public void Ranint100() {
-        Random rrr = new Random();
-        int num1 = rrr.nextInt(9);
-        int num2 = rrr.nextInt(89)+10;
-        result = num1*num2;
-        ShowVi(num1,num2);
-        }
-        public void ShowVi(int n1,int n2) { //מקבל שני מספרים ומציק בקופסאות
-        whitebox1.setText(n1+"");
-        whitebox2.setText(n2+"");
-        }
+
 
         public void IfEq(){
-            String s = result+"";
+            String s = Ex1.GetRes()+"";
             String ss = "success";
             String ee = "wrong...Try again";
             if (s.equals(tshoova.getText().toString()))
@@ -116,5 +94,12 @@ private Toast tos;
         tos.setText("very good");
         tos.show();
         }
+
+    @Override
+    public void Showvi(int n1, int n2) {
+        whitebox1.setText(n1+"");
+        whitebox2.setText(n2+"");
+    }
+
 
 }
