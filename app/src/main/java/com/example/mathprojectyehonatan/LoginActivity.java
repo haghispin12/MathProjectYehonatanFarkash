@@ -13,8 +13,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class LoginActivity extends AppCompatActivity {
-private EditText userName;
-private Button submit;
+private EditText etuserName;
+private Button btnsubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +26,13 @@ private Button submit;
     }
 
         private void initviews() {
-            userName = findViewById(R.id.usernn);
-            submit = findViewById(R.id.submitt);
-            submit.setOnClickListener(new View.OnClickListener() {
+            etuserName = findViewById(R.id.usernn);
+            btnsubmit = findViewById(R.id.submitt);
+            btnsubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("userKey", userName.getText().toString());
+                    intent.putExtra("userKey", etuserName.getText().toString());
                     startActivity(intent);
                 }
 
