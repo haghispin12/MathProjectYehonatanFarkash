@@ -5,7 +5,32 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
     tools:context=".LoginActivity">
 
+
+    <EditText
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:hint="user name"
+        android:layout_marginTop="65dp"
+        android:id="@+id/etUs"
+    >
+</EditText>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        android:textSize="30sp"
+        android:id="@+id/btnSub"
+        android:text="SUBMIT"
+        android:textColor="@color/black"
+        />
+
+
 </LinearLayout>
+
+

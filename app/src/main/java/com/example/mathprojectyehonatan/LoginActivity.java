@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,19 +27,22 @@ private Button btnsubmit;
     }
 
         private void initviews() {
-            etuserName = findViewById(R.id.usernn);
-            btnsubmit = findViewById(R.id.submitt);
+            etuserName = findViewById(R.id.etUs);
+            btnsubmit = findViewById(R.id.btnSub);
+
             btnsubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("userKey", etuserName.getText().toString());
                     startActivity(intent);
+                    String userName = getIntent().getStringExtra("userKey");
+                    Toast.makeText(LoginActivity.this,userName,Toast.LENGTH_SHORT).show();
                 }
+
 
             });
         }
 
 
     }
-}
