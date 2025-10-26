@@ -28,11 +28,13 @@ private TextView whitebox2;
 private EditText tshoova;
 private Button btnbdika;
 private Toast tos;
+private Toast tos1;
 private Exercise Ex1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initviews();
         Ex1 = new Exercise(this);
     }
@@ -45,8 +47,9 @@ private Exercise Ex1;
             whitebox2 = findViewById(R.id.txvwhitebox2);
             tshoova = findViewById(R.id.ettshoova);
             btnbdika = findViewById(R.id.btnbdika);
-
-
+            String userName = getIntent().getStringExtra("userKey");
+            User u = new User(userName);
+            Toast.makeText(this,"wellcome"+userName, Toast.LENGTH_SHORT).show();
             tos = new Toast(this);
             tos.setDuration(tos.LENGTH_SHORT);
             btnetger.setOnClickListener(new View.OnClickListener() {
