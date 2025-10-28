@@ -7,6 +7,7 @@ public class Exercise {
     protected int num1;
     private int num2;
     private CallBack cal1;
+    private int pub = 0;
     public int GetRes() {
         return this.Result;
     }
@@ -15,6 +16,7 @@ public class Exercise {
             this.cal1 = A1;
         }
     public void Ranint() { //מספר רנדומלי 0 עד 20
+        pub = 2;
         Random rr = new Random();
         int num1 = rr.nextInt(9);
         int num2 = rr.nextInt(20);
@@ -24,6 +26,7 @@ public class Exercise {
 
 
     public void Ranint10() { //מספר רנדומאלי בין 0 ל9
+        pub = 1;
         Random rr = new Random();
         int num1 = rr.nextInt(9);
         int num2 = rr.nextInt(9);
@@ -31,11 +34,15 @@ public class Exercise {
        cal1.Showvi(num1,num2); ///
     }
 
-    public void Ranint100() {
+    public void Ranint100() { // אתגר
+        pub = 3;
         Random rrr = new Random();
         int num1 = rrr.nextInt(8)+1;
         int num2 = rrr.nextInt(89)+10;
         Result = num1*num2;
         cal1.Showvi(num1,num2);
+    }
+    public int getPub() {
+        return this.pub;
     }
 }

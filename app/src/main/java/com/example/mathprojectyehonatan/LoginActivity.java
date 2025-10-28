@@ -36,8 +36,7 @@ private Toast tos1;
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("userKey", etuserName.getText().toString());
                     startActivity(intent);
-                    String userName = getIntent().getStringExtra("userKey");
-                    Toast.makeText(LoginActivity.this,userName,Toast.LENGTH_SHORT).show();
+
                 }
 
 

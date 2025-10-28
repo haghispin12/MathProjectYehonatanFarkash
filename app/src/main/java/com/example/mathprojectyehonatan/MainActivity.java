@@ -30,6 +30,7 @@ private Button btnbdika;
 private Toast tos;
 private Toast tos1;
 private Exercise Ex1;
+private User us1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ private Exercise Ex1;
 
         initviews();
         Ex1 = new Exercise(this);
+
     }
 
         private void initviews() { //java קישור בין הפקדים לקוד
@@ -48,8 +50,8 @@ private Exercise Ex1;
             tshoova = findViewById(R.id.ettshoova);
             btnbdika = findViewById(R.id.btnbdika);
             String userName = getIntent().getStringExtra("userKey");
-            User u = new User(userName);
-            Toast.makeText(this,"wellcome"+userName, Toast.LENGTH_SHORT).show();
+            us1 = new User(userName);
+            Toast.makeText(this,"wellcome "+userName, Toast.LENGTH_SHORT).show();
             tos = new Toast(this);
             tos.setDuration(tos.LENGTH_SHORT);
             btnetger.setOnClickListener(new View.OnClickListener() {
@@ -84,18 +86,23 @@ private Exercise Ex1;
             String s = Ex1.GetRes()+"";
             String ss = "success";
             String ee = "wrong...Try again";
-            if (s.equals(tshoova.getText().toString()))
+            if (s.equals(tshoova.getText().toString())) {
                 success();
+                if (Ex1.getPub() == 1)
+                    us1.setScore(5);
+                if (Ex1.getPub() == 2)
+                    us1.setScore(10);
+                if (Ex1.getPub() == 3)
+                    us1.setScore(20);
+            }
             else
                 incorrect();
         }
-        public void incorrect(){
-        tos.setText("wrong...try again");
-        tos.show();
+        public void incorrect() {
+            Toast.makeText(this, "wrong... try again", Toast.LENGTH_SHORT).show();
         }
-        public void success() {
-        tos.setText("very good");
-        tos.show();
+        public void success() {Toast.makeText(this,"very good!! - now your sum of score "+us1.getScore(), Toast.LENGTH_SHORT).show(); // מראה את סכום הנקודות שהמתשמש צבר עד עכשיו
+
         }
 
     @Override
