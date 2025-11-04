@@ -115,13 +115,13 @@ private Button btnRate;
             String ss = "success";
             String ee = "wrong...Try again";
             if (s.equals(tshoova.getText().toString())) {
-                success();
                 if (Ex1.getPub() == 1)
                     us1.setScore(5);
                 if (Ex1.getPub() == 2)
                     us1.setScore(10);
                 if (Ex1.getPub() == 3)
                     us1.setScore(20);
+                success();
             }
             else
                 incorrect();
