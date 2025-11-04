@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 public class LoginActivity extends AppCompatActivity {
 private EditText etuserName;
 private Button btnsubmit;
-private Toast tos1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

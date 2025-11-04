@@ -134,9 +134,10 @@
             android:background="@color/cardview_dark_background"
             android:hint="תשובה"
             android:textSize="30sp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:gravity="center"
             android:layout_margin="@dimen/cardview_default_radius"
+            android:backgroundTint="@color/white"
             android:id="@+id/ettshoova">
 
 
@@ -153,8 +154,7 @@
             android:layout_margin="@dimen/cardview_default_radius"
             android:layout_weight="1"
             android:background="@color/white"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/material_dynamic_secondary30"
+            android:textColor="@color/black"
             android:text="בדיקה"
             android:textSize="30sp">
 

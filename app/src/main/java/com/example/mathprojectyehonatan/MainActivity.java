@@ -1,5 +1,7 @@
 package com.example.mathprojectyehonatan;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.health.connect.datatypes.units.Length;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -31,6 +37,19 @@ private Toast tos;
 private Toast tos1;
 private Exercise Ex1;
 private User us1;
+private Button btnRate;
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult resS) {
+                int resRate = resS.getData().getIntExtra("Rate_key", -1);
+                Toast.makeText(MainActivity.this, "your rate: "+resRate, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "wrong... try again", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +68,7 @@ private User us1;
             whitebox2 = findViewById(R.id.txvwhitebox2);
             tshoova = findViewById(R.id.ettshoova);
             btnbdika = findViewById(R.id.btnbdika);
+            btnRate = findViewById(R.id.btnRate);
             String userName = getIntent().getStringExtra("userKey");
             us1 = new User(userName);
             Toast.makeText(this,"wellcome "+userName, Toast.LENGTH_SHORT).show();
@@ -77,6 +97,14 @@ private User us1;
                 @Override
                 public void onClick(View v) {
                  IfEq();
+                }
+
+            });
+            btnRate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RateActivity.class );
+                activityResultLauncher.launch(intent);
                 }
             });
         }
