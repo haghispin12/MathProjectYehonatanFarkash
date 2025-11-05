@@ -23,6 +23,9 @@ private Button btnsubmit;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loginactivity);
         initviews();
+        SharedPreferences sh = getSharedPreferences("myshPs", MODE_PRIVATE);
+        String st1 = sh.getString("name", "");
+        etuserName.setText(st1);
 
 
     }
@@ -41,9 +44,7 @@ private Button btnsubmit;
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("userKey", etuserName.getText().toString());
                     startActivity(intent);
-                    SharedPreferences sh = getSharedPreferences("sharePref", MODE_PRIVATE);
-                    String st1 = sh.getString("name", "");
-                    etuserName.setText(st1);
+
                 }
 
 
