@@ -1,7 +1,9 @@
 package com.example.mathprojectyehonatan;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,10 +34,16 @@ private Button btnsubmit;
             btnsubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    SharedPreferences shPrs = getSharedPreferences("myshPs", MODE_PRIVATE);
+                    SharedPreferences.Editor edtSp = shPrs.edit();
+                    edtSp.putString("name", etuserName.getText().toString());
+                    edtSp.apply();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("userKey", etuserName.getText().toString());
                     startActivity(intent);
-
+                    SharedPreferences sh = getSharedPreferences("sharePref", MODE_PRIVATE);
+                    String st1 = sh.getString("name", "");
+                    etuserName.setText(st1);
                 }
 
 
