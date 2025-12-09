@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 
 import java.util.Random;
 
@@ -38,6 +39,7 @@ private Toast tos1;
 private Exercise Ex1;
 private User us1;
 private Button btnRate;
+private Button btnshowAllUser;
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -69,46 +71,53 @@ private Button btnRate;
             tshoova = findViewById(R.id.ettshoova);
             btnbdika = findViewById(R.id.btnbdika);
             btnRate = findViewById(R.id.btnRate);
+            btnshowAllUser = findViewById(R.id.btnshoalus);
             String userName = getIntent().getStringExtra("userKey");
             us1 = new User(userName);
-            Toast.makeText(this,"wellcome "+userName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "wellcome " + userName, Toast.LENGTH_SHORT).show();
             tos = new Toast(this);
             tos.setDuration(tos.LENGTH_SHORT);
             btnetger.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Ex1.Ranint100();
+                    Ex1.Ranint100();
                 }
             });
-           btncefelad20.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View v) {
+            btncefelad20.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                   Ex1.Ranint();
-               }
-           });
+                    Ex1.Ranint();
+                }
+            });
             btnloohahacefal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Ex1.Ranint10();
+                    Ex1.Ranint10();
                 }
             });
             btnbdika.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                 IfEq();
+                    IfEq();
                 }
 
             });
             btnRate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, RateActivity.class );
-                activityResultLauncher.launch(intent);
+                    Intent intent = new Intent(MainActivity.this, RateActivity.class);
+                    activityResultLauncher.launch(intent);
+                }
+            });
+            btnshowAllUser.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentShowAllUs fragment = new FragmentShowAllUs();
+                    getSupportFragmentManager().beginTransaction();
                 }
             });
         }
-
 
         public void IfEq(){
             String s = Ex1.GetRes()+"";
