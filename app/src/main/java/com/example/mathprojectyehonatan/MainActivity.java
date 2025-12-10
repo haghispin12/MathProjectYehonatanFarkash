@@ -113,8 +113,8 @@ private Button btnshowAllUser;
             btnshowAllUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentShowAllUs fragment = new FragmentShowAllUs();
-                    getSupportFragmentManager().beginTransaction();
+                    ShowAllUser fragment = new ShowAllUser();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment, "anyTagName").commit();
                 }
             });
         }
