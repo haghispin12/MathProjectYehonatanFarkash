@@ -21,6 +21,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.Gson;
+
 import java.util.Random;
 
 import kotlin.random.URandomKt;
@@ -115,6 +117,11 @@ private Button btnshowAllUser;
                 public void onClick(View v) {
                     ShowAllUser fragment = new ShowAllUser();
                     getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment, "anyTagName").commit();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(us1);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("us1",json);
+                    fragment.setArguments(bundle);
                 }
             });
         }

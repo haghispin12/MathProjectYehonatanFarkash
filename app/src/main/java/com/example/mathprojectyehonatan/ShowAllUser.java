@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 
 public class ShowAllUser extends Fragment {
     private EditText UsrN;
@@ -20,6 +22,7 @@ public class ShowAllUser extends Fragment {
     private Button btnAddPicture;
     private ImageView imgVi;
     private Button AddUser;
+    private User uss;
 
 
     @Override
@@ -33,10 +36,13 @@ public class ShowAllUser extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.showalluser, container, false);
-
-
-initviews(view);
-
+        initviews(view);
+        String userStr = getArguments().getString("us1");
+        Gson gson = new Gson();
+        uss = gson.fromJson(userStr, User.class);
+        UsrN.setText(uss.getUserName());
+        Score.setText(uss.getScore());
+        Rating.setText(uss.getRating()); //צריך לשמור את הדירוג של המשתמש ולהעביר אותו לUS1 ואז שיעבור דרך ההצפנה לUSS
         return view;
     }
 
@@ -49,37 +55,8 @@ initviews(view);
         imgVi = view.findViewById(R.id.imageView);
         AddUser = view.findViewById(R.id.adusr);
 //        פתיחת האזנות
-        UsrN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
-        Score.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        Rating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         btnAddPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        imgVi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        AddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
