@@ -46,7 +46,7 @@ private Button btnshowAllUser;
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
-                public void onActivityResult(ActivityResult resS) {
+                public void onActivityResult(ActivityResult resS) { // listener when rate activity close
                 int resRate = resS.getData().getIntExtra("Rate_key", -1);
                 Toast.makeText(MainActivity.this, "your rate: "+resRate, Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(this, "wrong... try again", Toast.LENGTH_SHORT).show();
@@ -54,17 +54,23 @@ private Button btnshowAllUser;
                 }
             });
 
+    /**
+     *when activity is start
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initviews();
         Ex1 = new Exercise(this);
 
     }
 
-        private void initviews() { //java קישור בין הפקדים לקוד
+    /**
+     * connection design and code each layout separately(בנפרד)
+     */
+        private void initviews() {
             btnetger = findViewById(R.id.btnetger);
             btncefelad20 = findViewById(R.id.btncefelad20);
             btnloohahacefal = findViewById(R.id.btnloohahacefel);
@@ -74,45 +80,47 @@ private Button btnshowAllUser;
             btnbdika = findViewById(R.id.btnbdika);
             btnRate = findViewById(R.id.btnRate);
             btnshowAllUser = findViewById(R.id.btnshoalus);
-            String userName = getIntent().getStringExtra("userKey");
+
+
+            String userName = getIntent().getStringExtra("userKey"); // name to object of user, the name gets from intent from loginactivity
             us1 = new User(userName);
             Toast.makeText(this, "wellcome " + userName, Toast.LENGTH_SHORT).show();
             tos = new Toast(this);
             tos.setDuration(tos.LENGTH_SHORT);
-            btnetger.setOnClickListener(new View.OnClickListener() {
+            btnetger.setOnClickListener(new View.OnClickListener() { // listener of button etger(כפל במספרים של עד 99)
                 @Override
-                public void onClick(View v) {
+                public void onClick(View v) { //
                     Ex1.Ranint100();
                 }
             });
-            btncefelad20.setOnClickListener(new View.OnClickListener() {
+            btncefelad20.setOnClickListener(new View.OnClickListener() { // listener of button cefel up to 20(כפל עד 20)
                 @Override
                 public void onClick(View v) {
 
                     Ex1.Ranint();
                 }
             });
-            btnloohahacefal.setOnClickListener(new View.OnClickListener() {
+            btnloohahacefal.setOnClickListener(new View.OnClickListener() { // listener of button of multiplication table (לוח הכפל)
                 @Override
                 public void onClick(View v) {
                     Ex1.Ranint10();
                 }
             });
-            btnbdika.setOnClickListener(new View.OnClickListener() {
+            btnbdika.setOnClickListener(new View.OnClickListener() { // listener of button that check the result of the user
                 @Override
                 public void onClick(View v) {
                     IfEq();
                 }
 
             });
-            btnRate.setOnClickListener(new View.OnClickListener() {
+            btnRate.setOnClickListener(new View.OnClickListener() { // listener of button - the user rate the app
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, RateActivity.class);
                     activityResultLauncher.launch(intent);
                 }
             });
-            btnshowAllUser.setOnClickListener(new View.OnClickListener() {
+            btnshowAllUser.setOnClickListener(new View.OnClickListener() { // listener of button that show the parameter of user
                 @Override
                 public void onClick(View v) {
                     ShowAllUser fragment = new ShowAllUser();
