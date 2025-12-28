@@ -21,5 +21,9 @@ public class User {
     }
     public int getRating() {
         return this.rating;
+    }//לא יודע איך לשמור
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 }

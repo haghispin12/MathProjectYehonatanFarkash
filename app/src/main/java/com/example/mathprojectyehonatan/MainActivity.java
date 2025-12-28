@@ -48,6 +48,7 @@ private Button btnshowAllUser;
                 @Override
                 public void onActivityResult(ActivityResult resS) { // listener when rate activity close
                 int resRate = resS.getData().getIntExtra("Rate_key", -1);
+                us1.setRating(resRate);
                 Toast.makeText(MainActivity.this, "your rate: "+resRate, Toast.LENGTH_SHORT).show();
 //                    Toast.makeText(this, "wrong... try again", Toast.LENGTH_SHORT).show();
 
@@ -123,13 +124,14 @@ private Button btnshowAllUser;
             btnshowAllUser.setOnClickListener(new View.OnClickListener() { // listener of button that show the parameter of user
                 @Override
                 public void onClick(View v) {
-                    ShowAllUser fragment = new ShowAllUser();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment, "anyTagName").commit();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(us1);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("us1",json);
-                    fragment.setArguments(bundle);
+                    ShowAllUser fragment = new ShowAllUser(); //
+                    Gson gson = new Gson(); // יצירת אובייקט שאיתו הופכים לסטרינג
+                    String json = gson.toJson(us1); // הפיכת אובייקט לסטרינג (הצפנה)
+                    Bundle bundle = new Bundle(); // ארגז שבעזרתו מעבירים את הסטרינג לפרגמנט
+                    bundle.putString("us1",json); // מעביר את ה"ארגז" עם הסטרינג המקובץ לפרגמנט
+                    fragment.setArguments(bundle); // שולח לפרגמנט
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment, "anyTagName").commit(); //פותח את הפרגמנט בעזרת הלחיצה
+
                 }
             });
         }

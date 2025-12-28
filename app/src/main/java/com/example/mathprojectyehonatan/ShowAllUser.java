@@ -38,11 +38,11 @@ public class ShowAllUser extends Fragment {
         View view = inflater.inflate(R.layout.showalluser, container, false);
         initviews(view);
         String userStr = getArguments().getString("us1");
-        Gson gson = new Gson();
-        uss = gson.fromJson(userStr, User.class);
-        UsrN.setText(uss.getUserName());
-        Score.setText(uss.getScore());
-        Rating.setText(uss.getRating()); //צריך לשמור את הדירוג של המשתמש ולהעביר אותו לUS1 ואז שיעבור דרך ההצפנה לUSS
+        Gson gson = new Gson(); // יצירת אובייקט בשביל להמיר לאובייקט מחדש
+        uss = gson.fromJson(userStr, User.class); // שליפת הסטרינג בחזרה לאובייקט
+        UsrN.setText(uss.getUserName()); // הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
+        Score.setText(uss.getScore()+"");//הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
+        Rating.setText(uss.getRating()+""); //הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
         return view;
     }
 
