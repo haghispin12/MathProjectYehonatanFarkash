@@ -1,9 +1,12 @@
 package com.example.mathprojectyehonatan;
 
+import android.net.Uri;
+
 public class User {
     private String userName;
     private int score;
     private int rating;
+     private Uri uri1;
     public User(String username){
         this.userName = username;
     }
@@ -26,4 +29,8 @@ public class User {
     public void setRating(int rating) {
         this.rating = rating;
     }
+    public void setPctr(Uri urii) {
+        uri1 = urii;
+    }
 }
+

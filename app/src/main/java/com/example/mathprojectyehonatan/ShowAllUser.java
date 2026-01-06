@@ -1,9 +1,20 @@
 package com.example.mathprojectyehonatan;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.app.Instrumentation;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +34,30 @@ public class ShowAllUser extends Fragment {
     private ImageView imgVi;
     private Button AddUser;
     private User uss;
+    Uri uri;
+
+
+
+        public  ActivityResultLauncher<Intent> startCamera = registerForActivityResult(   // האזנה לסגירת startcamera
+
+                    new ActivityResultContracts.StartActivityForResult(),
+
+                    new ActivityResultCallback<ActivityResult>() {
+
+                        @Override
+
+                        public void onActivityResult(ActivityResult result) {
+
+                            if (result.getResultCode() == RESULT_OK) {
+                                imgVi.setImageURI(uri);
+                                uss.setPctr(uri);
+
+                            }
+
+                        }
+
+                    });
+
 
 
     @Override
@@ -44,6 +79,8 @@ public class ShowAllUser extends Fragment {
         Score.setText(uss.getScore()+"");//הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
         Rating.setText(uss.getRating()+""); //הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
         return view;
+
+
     }
 
     private void initviews(View view) {
@@ -60,6 +97,20 @@ public class ShowAllUser extends Fragment {
             @Override
             public void onClick(View v) {
 
+                ContentValues values = new ContentValues();
+
+                values.put(MediaStore.Images.Media.TITLE, "New Picture");
+
+                values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+
+                uri =
+                        requireContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+                startCamera.launch(cameraIntent);
             }
         });
     }
