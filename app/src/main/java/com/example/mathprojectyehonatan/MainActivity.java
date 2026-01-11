@@ -57,7 +57,7 @@ private Button btnshowAllUser;
             });
 
     /**
-     *when activity is start
+     *פועל כשהפעולה מתחילה
      */
 
     @Override
@@ -70,7 +70,7 @@ private Button btnshowAllUser;
     }
 
     /**
-     * connection design and code each layout separately(בנפרד)
+     * מחבר את העיצוב והקוד אחד לשני
      */
         private void initviews() {
             btnetger = findViewById(R.id.btnetger);
@@ -84,45 +84,45 @@ private Button btnshowAllUser;
             btnshowAllUser = findViewById(R.id.btnshoalus);
 
 
-            String userName = getIntent().getStringExtra("userKey"); // name to object of user, the name gets from intent from loginactivity
+            String userName = getIntent().getStringExtra("userKey"); // שם לאובייקט של user, השם שמתקבל במסך ההתחברות
             us1 = new User(userName);
             Toast.makeText(this, "wellcome " + userName, Toast.LENGTH_SHORT).show();
             tos = new Toast(this);
             tos.setDuration(tos.LENGTH_SHORT);
-            btnetger.setOnClickListener(new View.OnClickListener() { // listener of button etger(כפל במספרים של עד 99)
+            btnetger.setOnClickListener(new View.OnClickListener() { // מאזין לכפתור etgar(כפל במספרים של עד 99)
                 @Override
                 public void onClick(View v) { //
                     Ex1.Ranint100();
                 }
             });
-            btncefelad20.setOnClickListener(new View.OnClickListener() { // listener of button cefel up to 20(כפל עד 20)
+            btncefelad20.setOnClickListener(new View.OnClickListener() { // מאזין לכפתור -cefelad20(כפל עד 20)
                 @Override
                 public void onClick(View v) {
 
                     Ex1.Ranint();
                 }
             });
-            btnloohahacefal.setOnClickListener(new View.OnClickListener() { // listener of button of multiplication table (לוח הכפל)
+            btnloohahacefal.setOnClickListener(new View.OnClickListener() { // מאזין לכפתור -loohahacefel(לוח הכפל)
                 @Override
                 public void onClick(View v) {
                     Ex1.Ranint10();
                 }
             });
-            btnbdika.setOnClickListener(new View.OnClickListener() { // listener of button that check the result of the user
+            btnbdika.setOnClickListener(new View.OnClickListener() { // מאזין לכפתור - bdika
                 @Override
                 public void onClick(View v) {
                     IfEq();
                 }
 
             });
-            btnRate.setOnClickListener(new View.OnClickListener() { // listener of button - the user rate the app
+            btnRate.setOnClickListener(new View.OnClickListener() { // מאזין לכפתור - rate
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, RateActivity.class);
                     activityResultLauncher.launch(intent);
                 }
             });
-            btnshowAllUser.setOnClickListener(new View.OnClickListener() { // listener of button that show the parameter of user
+            btnshowAllUser.setOnClickListener(new View.OnClickListener() { // מאזין לכפתור - showAllUser
                 @Override
                 public void onClick(View v) {
                     ShowAllUser fragment = new ShowAllUser(); //

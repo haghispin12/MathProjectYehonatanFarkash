@@ -27,7 +27,7 @@ public class RateActivity extends AppCompatActivity {
                 finish();
             }
         });
-        seekbar = findViewById(R.id.seekbar);
+        seekbar = findViewById(R.id.seekbar); // פס דירוג
 
     }
     @Override

@@ -1,5 +1,6 @@
 package com.example.mathprojectyehonatan;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 public class User {
@@ -7,8 +8,13 @@ public class User {
     private int score;
     private int rating;
      private Uri uri1;
+     private Bitmap bitm;
+     private long id;
     public User(String username){
         this.userName = username;
+    }
+    public User(long id, String name, int rate, Bitmap bitmap, int score) {
+        this. id = id; this.userName = name; this.rating = rate; this.bitm = bitmap; this.score = score;
     }
     public void setScore(int score){
         this.score += score;
@@ -31,6 +37,13 @@ public class User {
     }
     public void setPctr(Uri urii) {
         uri1 = urii;
+    }
+
+    public Uri getUri() {
+        return uri1;
+    }
+    public void setId(long id) {
+        this.id = id;
     }
 }
 

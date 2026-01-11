@@ -25,16 +25,20 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 
 public class ShowAllUser extends Fragment {
     private EditText UsrN;
     private TextView Score;
     private TextView Rating;
     private Button btnAddPicture;
+    private Button btnAddUser;
     private ImageView imgVi;
     private Button AddUser;
     private User uss;
     Uri uri;
+    private ArrayList<User> arr;
 
 
 
@@ -90,7 +94,8 @@ public class ShowAllUser extends Fragment {
         Rating = view.findViewById(R.id.Rating);
         btnAddPicture = view.findViewById(R.id.addpctr);
         imgVi = view.findViewById(R.id.imageView);
-        AddUser = view.findViewById(R.id.adusr);
+        btnAddUser = view.findViewById(R.id.addusr);
+
 //        פתיחת האזנות
 
         btnAddPicture.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +118,25 @@ public class ShowAllUser extends Fragment {
                 startCamera.launch(cameraIntent);
             }
         });
+        btnAddUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbAddUser();
+                PushParameter();
+            }
+        });
     }
 
+    /**
+     *
+     */
+    public void dbAddUser() {
+        DBHelper dbh = new DBHelper(requireActivity());
+       long id =  dbh.insert(uss,requireActivity());
+        int n =0;
+    }
+    public void PushParameter() { //שליפת הנתונים מהdatabase
+         DBHelper dbhh = new DBHelper(requireActivity());
+         arr = dbhh.selectAll();
+    }
 }

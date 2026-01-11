@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,8 +14,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DBHelper {
-     package com.hag.mathexerciseproject.classesDB;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,8 +26,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.Nullable;
-
-import com.hag.mathexerciseproject.classesModel.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -89,7 +86,7 @@ import java.util.ArrayList;
             ContentValues values = new ContentValues();
             values.put(COLUMN_NAME, user.getUserName());
             values.put(COLUMN_RATE, user.getRating());
-            values.put(COLUMN_SCORE, user.getMyScore());
+            values.put(COLUMN_SCORE, user.getScore());
 
             // stored as Binary Large OBject ->  BLOB
             try {
@@ -133,67 +130,67 @@ import java.util.ArrayList;
 //        }
 //
 //        // return all rows in table
-//        public ArrayList<User> selectAll(){
-//            database = getReadableDatabase(); // get access to read the database
-//            ArrayList<User> users = new ArrayList<>();
-//            Cursor cursor = database.query(TABLE_RECORD, allColumns, null, null, null, null, null); // cursor points at a certain row
-//            if (cursor.getCount() > 0) {
-//                while (cursor.moveToNext()) {
-//                    String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-//                    int rating = cursor.getInt(cursor.getColumnIndex(COLUMN_RATE));
-//                    int score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
-//                    byte[] bytes = cursor.getBlob(cursor.getColumnIndex(COLUMN_PICTURE));
-//
-//                    Bitmap bitmap = getImage(bytes);
-//                    long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
-//                    User user= new User(id,name,rating,bitmap,score);
-//                    users.add(user);
-//                }
-//            }
-//            cursor.close();
-//            database.close();
-//            return users;
-//        }
+        public ArrayList<User> selectAll(){
+            database = getReadableDatabase(); // get access to read the database
+            ArrayList<User> users = new ArrayList<>();
+            Cursor cursor = database.query(TABLE_RECORD, allColumns, null, null, null, null, null); // cursor points at a certain row
+            if (cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
+                    int rating = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RATE));
+                    int score = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SCORE));
+                    byte[] bytes = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_PICTURE));
+
+                    Bitmap bitmap = getImage(bytes);
+                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID));
+                    User user= new User(id,name,rating,bitmap,score);
+                    users.add(user);
+                }
+            }
+            cursor.close();
+            database.close();
+            return users;
+        }
 
         //
         // I prefer using this one...
         //
-        public ArrayList<User> genericSelectByUserName(String userName)
-        {
-            String[] vals = { userName };
-            // if using the rawQuery
-            // String query = "SELECT * FROM " + TABLE_RECORD + " WHERE " + COLUMN_NAME + " = ?";
-            String column = COLUMN_NAME;
-            return select(column,vals);
-        }
+//        public ArrayList<User> genericSelectByUserName(String userName)
+//        {
+//            String[] vals = { userName };
+//            // if using the rawQuery
+//            // String query = "SELECT * FROM " + TABLE_RECORD + " WHERE " + COLUMN_NAME + " = ?";
+//            String column = COLUMN_NAME;
+//            return select(column,vals);
+//        }
 
 
         // INPUT: notice two options rawQuery should look like
         // rawQuery("SELECT id, name FROM people WHERE name = ? AND id = ?", new String[] {"David", "2"});
         // OUTPUT: arraylist - number of elements accordingly
-        public ArrayList<User> select(String column,String[] values)
-        {
-            database = getReadableDatabase(); // get access to read the database
-            ArrayList<User> users = new ArrayList<>();
-            // Two options,
-            // since query cannot be created in compile time there is no difference
-            //Cursor cursor = database.rawQuery(query, values);
-            Cursor cursor= database.query(TABLE_RECORD, allColumns, COLUMN_NAME +" = ? ", values, null, null, null); // cursor points at a certain row
-            if (cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                    int rating = cursor.getInt(cursor.getColumnIndex(COLUMN_RATE));
-                    byte[] bytes = cursor.getBlob(cursor.getColumnIndex(COLUMN_PICTURE));
-                    int score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
-                    Bitmap bitmap = getImage(bytes);
-                    long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
-                    User user= new User(id,name,rating,bitmap,score);
-                    users.add(user);
-                }// end while
-            } // end if
-            database.close();
-            return users;
-        }
+//        public ArrayList<User> select(String column,String[] values)
+//        {
+//            database = getReadableDatabase(); // get access to read the database
+//            ArrayList<User> users = new ArrayList<>();
+//            // Two options,
+//            // since query cannot be created in compile time there is no difference
+//            //Cursor cursor = database.rawQuery(query, values);
+//            Cursor cursor= database.query(TABLE_RECORD, allColumns, COLUMN_NAME +" = ? ", values, null, null, null); // cursor points at a certain row
+//            if (cursor.getCount() > 0) {
+//                while (cursor.moveToNext()) {
+//                    String name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
+//                    int rating = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RATE));
+//                    byte[] bytes = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_PICTURE));
+//                    int score = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SCORE));
+//                    Bitmap bitmap = getImage(bytes);
+//                    long id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_ID));
+//                    User user= new User(id,name,rating,bitmap,score);
+//                    users.add(user);
+//                }// end while
+//            } // end if
+//            database.close();
+//            return users;
+//        }
 
         public static byte[] getBytes(Context context, Uri uri) throws IOException {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(),uri);
