@@ -1,10 +1,20 @@
 package com.example.mathprojectyehonatan;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class DBHelper {
-    package com.hag.mathexerciseproject.classesDB;
+     package com.hag.mathexerciseproject.classesDB;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -74,7 +84,7 @@ import java.util.ArrayList;
 
         // get the user back with the id
         // also possible to return only the id
-        public long insert(User user,Context context){
+        public long insert(User user, Context context){
             database = getWritableDatabase(); // get access to write the database
             ContentValues values = new ContentValues();
             values.put(COLUMN_NAME, user.getUserName());
@@ -94,56 +104,56 @@ import java.util.ArrayList;
             return id;
         }
 
-        // remove a specific user from the table
-        public void deleteUser(User user)
-        {
-
-        }
-
-        public void deleteById(long id )
-        {
-            database = getWritableDatabase(); // get access to write e data
-            database.delete(TABLE_RECORD, COLUMN_ID + " = " + id, null);
-            database.close(); // close the database
-        }
-
-        // update a specific user
-        public void update(User user)
-        {
-            database = getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put(COLUMN_ID, user.getId());
-            values.put(COLUMN_NAME, user.getUserName());
-            values.put(COLUMN_RATE, user.getRating());
-            // stored as Binary Large OBject ->  BLOB
-            values.put(COLUMN_PICTURE, getBytes(user.getBitmap()));
-            database.update(TABLE_RECORD, values, COLUMN_ID + "=" + user.getId(), null);
-            database.close();
-
-        }
-
-        // return all rows in table
-        public ArrayList<User> selectAll(){
-            database = getReadableDatabase(); // get access to read the database
-            ArrayList<User> users = new ArrayList<>();
-            Cursor cursor = database.query(TABLE_RECORD, allColumns, null, null, null, null, null); // cursor points at a certain row
-            if (cursor.getCount() > 0) {
-                while (cursor.moveToNext()) {
-                    String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                    int rating = cursor.getInt(cursor.getColumnIndex(COLUMN_RATE));
-                    int score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
-                    byte[] bytes = cursor.getBlob(cursor.getColumnIndex(COLUMN_PICTURE));
-
-                    Bitmap bitmap = getImage(bytes);
-                    long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
-                    User user= new User(id,name,rating,bitmap,score);
-                    users.add(user);
-                }
-            }
-            cursor.close();
-            database.close();
-            return users;
-        }
+//        // remove a specific user from the table
+//        public void deleteUser(User user)
+//        {
+//
+//        }
+//
+//        public void deleteById(long id )
+//        {
+//            database = getWritableDatabase(); // get access to write e data
+//            database.delete(TABLE_RECORD, COLUMN_ID + " = " + id, null);
+//            database.close(); // close the database
+//        }
+//
+//        // update a specific user
+//        public void update(User user)
+//        {
+//            database = getWritableDatabase();
+//            ContentValues values = new ContentValues();
+//            values.put(COLUMN_ID, user.getId());
+//            values.put(COLUMN_NAME, user.getUserName());
+//            values.put(COLUMN_RATE, user.getRating());
+//            // stored as Binary Large OBject ->  BLOB
+//            values.put(COLUMN_PICTURE, getBytes(user.getBitmap()));
+//            database.update(TABLE_RECORD, values, COLUMN_ID + "=" + user.getId(), null);
+//            database.close();
+//
+//        }
+//
+//        // return all rows in table
+//        public ArrayList<User> selectAll(){
+//            database = getReadableDatabase(); // get access to read the database
+//            ArrayList<User> users = new ArrayList<>();
+//            Cursor cursor = database.query(TABLE_RECORD, allColumns, null, null, null, null, null); // cursor points at a certain row
+//            if (cursor.getCount() > 0) {
+//                while (cursor.moveToNext()) {
+//                    String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+//                    int rating = cursor.getInt(cursor.getColumnIndex(COLUMN_RATE));
+//                    int score = cursor.getInt(cursor.getColumnIndex(COLUMN_SCORE));
+//                    byte[] bytes = cursor.getBlob(cursor.getColumnIndex(COLUMN_PICTURE));
+//
+//                    Bitmap bitmap = getImage(bytes);
+//                    long id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
+//                    User user= new User(id,name,rating,bitmap,score);
+//                    users.add(user);
+//                }
+//            }
+//            cursor.close();
+//            database.close();
+//            return users;
+//        }
 
         //
         // I prefer using this one...
