@@ -47,7 +47,7 @@
     android:layout_gravity="center"
     android:textSize="25sp"
     android:text="ADD PICTURE"
-    android:layout_marginTop="230dp"
+    android:layout_marginTop="20dp"
     android:id="@+id/addpctr"/>
 
 
@@ -67,5 +67,9 @@
         android:id="@+id/addusr">
 
     </Button>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recycle"/>
 
 </LinearLayout>

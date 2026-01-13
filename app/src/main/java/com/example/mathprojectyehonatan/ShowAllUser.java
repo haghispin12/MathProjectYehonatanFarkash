@@ -38,7 +38,10 @@ public class ShowAllUser extends Fragment {
     private Button AddUser;
     private User uss;
     Uri uri;
-    private ArrayList<User> arr;
+    private ArrayList<User> arr; // מערך מסוג user
+    private ImageView pictre;
+    private TextView grades;
+    private TextView name;
 
 
 
@@ -67,6 +70,7 @@ public class ShowAllUser extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbSelectUsers(); // קיראה לפעולה ששולפת את המשתמשים מהdatabase
 
     }
 
@@ -122,21 +126,23 @@ public class ShowAllUser extends Fragment {
             @Override
             public void onClick(View v) {
                 dbAddUser();
-                PushParameter();
+                dbSelectUsers();
             }
         });
     }
 
     /**
-     *
+     * פעולה שמוסיפה משתמש עם כל הנתונים שלו
      */
     public void dbAddUser() {
         DBHelper dbh = new DBHelper(requireActivity());
        long id =  dbh.insert(uss,requireActivity());
         int n =0;
     }
-    public void PushParameter() { //שליפת הנתונים מהdatabase
+    public void dbSelectUsers() { //שליפת הנתונים מהdatabase
          DBHelper dbhh = new DBHelper(requireActivity());
          arr = dbhh.selectAll();
+         int n1 =0;
     }
+
 }
