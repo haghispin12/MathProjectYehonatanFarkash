@@ -157,7 +157,7 @@ public class ShowAllUser extends Fragment {
 
             }
         });
-                rcShowUsers.setLayoutManager(new LinearLayoutManager(this)); //getcontext
+                rcShowUsers.setLayoutManager(new LinearLayoutManager(getContext())); //getcontext//this
                 rcShowUsers.setAdapter(myUsersAdapter);
                 rcShowUsers.setHasFixedSize(true);
     }
