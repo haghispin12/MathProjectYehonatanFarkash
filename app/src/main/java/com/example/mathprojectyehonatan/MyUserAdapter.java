@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHolder> {
     private ArrayList<User> userr ;
     private MyInterOnItemClickListener listener;
-    public MyUserAdapter(ArrayList<User> user, MyInterOnItemClickListener listener) {
+    public MyUserAdapter(ArrayList<User> user, MyInterOnItemClickListener listener) { //פעולה בונה
         this.userr = user;
         this.listener = listener;
     }
@@ -25,13 +25,13 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
 
     @NonNull
     @Override
-    public MyUserAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyUserAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { //את מי להכפיל
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemusers,parent,false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyUserAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyUserAdapter.MyViewHolder holder, int position) { //
     holder.bind(userr.get(position),listener);
     }
 
@@ -42,15 +42,29 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView tvUserName;
+        TextView tvGrade;
         ImageView ivUserImg;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvUserName = itemView.findViewById(R.id.tvUserName);
-            ivUserImg = itemView.findViewById(R.id.ivUserImg);
+            tvUserName = itemView.findViewById(R.id.name);
+            tvGrade = itemView.findViewById(R.id.grade);
+            ivUserImg = itemView.findViewById(R.id.pictre);
         }
 
-        public void bind (final )
+        public void bind (final User item, final  MyInterOnItemClickListener listener) {
+            tvUserName.setText((item.getUserName()));
+            tvGrade.setText(item.getScore());
+            ivUserImg.setImageBitmap(item.getBitm());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
     }
+
 
 }

@@ -13,6 +13,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -42,7 +44,7 @@ public class ShowAllUser extends Fragment {
     private ImageView pictre;
     private TextView grades;
     private TextView name;
-
+    private RecyclerView rcShowUsers;
 
 
         public  ActivityResultLauncher<Intent> startCamera = registerForActivityResult(   // האזנה לסגירת startcamera
@@ -99,6 +101,7 @@ public class ShowAllUser extends Fragment {
         btnAddPicture = view.findViewById(R.id.addpctr);
         imgVi = view.findViewById(R.id.imageView);
         btnAddUser = view.findViewById(R.id.addusr);
+        rcShowUsers = view.findViewById(R.id.recycle);
 
 //        פתיחת האזנות
 
@@ -142,7 +145,21 @@ public class ShowAllUser extends Fragment {
     public void dbSelectUsers() { //שליפת הנתונים מהdatabase
          DBHelper dbhh = new DBHelper(requireActivity());
          arr = dbhh.selectAll();
+        showUsers();
          int n1 =0;
+    }
+
+
+    public void showUsers() {
+        MyUserAdapter myUsersAdapter = new MyUserAdapter(arr, new MyInterOnItemClickListener() {
+            @Override
+            public void onItemClick(User item) {
+
+            }
+        });
+                rcShowUsers.setLayoutManager(new LinearLayoutManager(this)); //getcontext
+                rcShowUsers.setAdapter(myUsersAdapter);
+                rcShowUsers.setHasFixedSize(true);
     }
 
 }
