@@ -47,32 +47,31 @@ public class ShowAllUser extends Fragment {
     private RecyclerView rcShowUsers;
 
 
-        public  ActivityResultLauncher<Intent> startCamera = registerForActivityResult(   // האזנה לסגירת startcamera
+    public ActivityResultLauncher<Intent> startCamera = registerForActivityResult(   // האזנה לסגירת startcamera
 
-                    new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultContracts.StartActivityForResult(),
 
-                    new ActivityResultCallback<ActivityResult>() {
+            new ActivityResultCallback<ActivityResult>() {
 
-                        @Override
+                @Override
 
-                        public void onActivityResult(ActivityResult result) {
+                public void onActivityResult(ActivityResult result) {
 
-                            if (result.getResultCode() == RESULT_OK) {
-                                imgVi.setImageURI(uri);
-                                uss.setPctr(uri);
+                    if (result.getResultCode() == RESULT_OK) {
+                        imgVi.setImageURI(uri);
+                        uss.setPctr(uri);
 
-                            }
+                    }
 
-                        }
+                }
 
-                    });
-
+            });
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dbSelectUsers(); // קיראה לפעולה ששולפת את המשתמשים מהdatabase
+       // קיראה לפעולה ששולפת את המשתמשים מהdatabase
 
     }
 
@@ -86,8 +85,9 @@ public class ShowAllUser extends Fragment {
         Gson gson = new Gson(); // יצירת אובייקט בשביל להמיר לאובייקט מחדש
         uss = gson.fromJson(userStr, User.class); // שליפת הסטרינג בחזרה לאובייקט
         UsrN.setText(uss.getUserName()); // הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
-        Score.setText(uss.getScore()+"");//הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
-        Rating.setText(uss.getRating()+""); //הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
+        Score.setText(uss.getScore() + "");//הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
+        Rating.setText(uss.getRating() + ""); //הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
+        dbSelectUsers();
         return view;
 
 
@@ -139,14 +139,15 @@ public class ShowAllUser extends Fragment {
      */
     public void dbAddUser() {
         DBHelper dbh = new DBHelper(requireActivity());
-       long id =  dbh.insert(uss,requireActivity());
-        int n =0;
+        long id = dbh.insert(uss, requireActivity());
+        int n = 0;
     }
+
     public void dbSelectUsers() { //שליפת הנתונים מהdatabase
-         DBHelper dbhh = new DBHelper(requireActivity());
-         arr = dbhh.selectAll();
+        DBHelper dbhh = new DBHelper(requireActivity());
+        arr = dbhh.selectAll();
         showUsers();
-         int n1 =0;
+        int n1 = 0;
     }
 
 
@@ -157,9 +158,10 @@ public class ShowAllUser extends Fragment {
 
             }
         });
-                rcShowUsers.setLayoutManager(new LinearLayoutManager(getContext())); //getcontext//this
-                rcShowUsers.setAdapter(myUsersAdapter);
-                rcShowUsers.setHasFixedSize(true);
+        rcShowUsers.setLayoutManager(new LinearLayoutManager(getActivity())); //getcontext//this
+        rcShowUsers.setAdapter(myUsersAdapter);
+        rcShowUsers.setHasFixedSize(true);
     }
+
 
 }
