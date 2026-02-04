@@ -54,7 +54,7 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
 
         public void bind (final User item, final  MyInterOnItemClickListener listener) {
             tvUserName.setText((item.getUserName()));
-            tvGrade.setText(item.getScore());
+            tvGrade.setText(item.getScore()+"");
             ivUserImg.setImageBitmap(item.getBitm());
 
             itemView.setOnClickListener(new View.OnClickListener() {

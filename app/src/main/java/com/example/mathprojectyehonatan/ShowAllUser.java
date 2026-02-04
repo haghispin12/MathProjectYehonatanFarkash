@@ -71,7 +71,7 @@ public class ShowAllUser extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // קיראה לפעולה ששולפת את המשתמשים מהdatabase
+
 
     }
 
@@ -87,7 +87,7 @@ public class ShowAllUser extends Fragment {
         UsrN.setText(uss.getUserName()); // הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
         Score.setText(uss.getScore() + "");//הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
         Rating.setText(uss.getRating() + ""); //הכנסת נתון מהאובייקט למיקום הנכון בפרגמנט
-        dbSelectUsers();
+        dbSelectUsers(); // קיראה לפעולה ששולפת את המשתמשים מהdatabase
         return view;
 
 
