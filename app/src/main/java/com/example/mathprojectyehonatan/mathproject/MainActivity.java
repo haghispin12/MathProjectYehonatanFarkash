@@ -1,9 +1,6 @@
-package com.example.mathprojectyehonatan;
+package com.example.mathprojectyehonatan.mathproject;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.health.connect.datatypes.units.Length;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,22 +8,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 
+import com.example.mathprojectyehonatan.R;
 import com.google.gson.Gson;
-
-import java.util.Random;
-
-import kotlin.random.URandomKt;
 
 public class MainActivity extends AppCompatActivity implements CallBack {
 

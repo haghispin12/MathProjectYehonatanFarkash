@@ -1,8 +1,7 @@
-package com.example.mathprojectyehonatan;
+package com.example.mathprojectyehonatan.mathproject;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.Instrumentation;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.mathprojectyehonatan.R;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

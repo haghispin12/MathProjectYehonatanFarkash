@@ -13,7 +13,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/material_dynamic_secondary30"
-    tools:context=".MainActivity"
+    tools:context=".mathproject.MainActivity"
     android:layout_gravity="center_horizontal"
     android:layout_weight="1">
     <TextView

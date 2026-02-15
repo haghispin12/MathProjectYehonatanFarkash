@@ -1,4 +1,4 @@
-package com.example.mathprojectyehonatan;
+package com.example.mathprojectyehonatan.mathproject;
 
 public interface MyInterOnItemClickListener {
 

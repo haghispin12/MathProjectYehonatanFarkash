@@ -1,4 +1,6 @@
-package com.example.mathprojectyehonatan;
+package com.example.mathprojectyehonatan.mathproject;
+
+import com.example.mathprojectyehonatan.mathproject.CallBack;
 
 import java.util.Random;
 

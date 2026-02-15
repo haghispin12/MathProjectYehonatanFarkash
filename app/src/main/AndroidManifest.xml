@@ -13,10 +13,7 @@
         android:theme="@style/Theme.MathProjectYehonatan"
         tools:targetApi="31">
         <activity
-            android:name=".RateActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
+            android:name=".workermanage.MainActivityLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +22,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".mathproject.RateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".mathproject.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".mathproject.MainActivity"
             android:exported="false" />
     </application>
 
