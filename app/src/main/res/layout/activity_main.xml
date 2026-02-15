@@ -44,17 +44,16 @@
 
 
         <Button
+            android:id="@+id/btnetger"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="אתגר"
             android:layout_margin="@dimen/cardview_default_radius"
-            android:backgroundTint="@color/white"
+            android:layout_weight="1"
             android:background="@color/white"
+            android:backgroundTint="@color/white"
+            android:text="אתגר"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:id="@+id/btnetger">
-
+            android:textSize="20sp">
 
 
         </Button>

@@ -6,19 +6,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center_vertical"
     tools:context=".workermanage.MainActivityLogin">
 <EditText
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textSize="30sp"
-    android:hint="user name"
-    android:layout_marginTop="60dp"
+    android:hint="תעודת זהות"
+    android:gravity="center"
     android:id="@+id/etUsN"/>
+
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
-        android:hint="password"
-        android:id="@+id/etPass"/>
+        android:hint="סיסמה"
+        android:gravity="center"
+        android:id="@+id/etPass"
+        android:layout_marginTop="20dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:layout_gravity="center"
+        android:id="@+id/btnLogIn"
+        android:text="כניסה"
+        android:layout_marginTop="20dp"/>
+
 </LinearLayout>
