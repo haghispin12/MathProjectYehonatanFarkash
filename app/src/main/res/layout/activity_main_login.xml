@@ -8,14 +8,15 @@
     android:orientation="vertical"
     android:gravity="center_vertical"
     tools:context=".workermanage.MainActivityLogin">
-<EditText
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textSize="30sp"
-    android:hint="תעודת זהות"
-    android:gravity="center"
-    android:id="@+id/etUsN"/>
 
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="מייל"
+        android:textSize="30sp" />
 
     <EditText
         android:layout_width="match_parent"

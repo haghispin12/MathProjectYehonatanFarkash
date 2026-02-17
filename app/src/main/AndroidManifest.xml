@@ -13,6 +13,12 @@
         android:theme="@style/Theme.MathProjectYehonatan"
         tools:targetApi="31">
         <activity
+            android:name=".workermanage.workerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".workermanage.factorymanager"
+            android:exported="false" />
+        <activity
             android:name=".workermanage.MainActivityLogin"
             android:exported="true">
             <intent-filter>

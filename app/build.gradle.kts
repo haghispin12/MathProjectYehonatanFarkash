@@ -45,5 +45,9 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
     implementation("com.google.firebase:firebase-analytics")
+    //implementation ("com.google.firebase:firebase-auth-ktx:20.0.1")
+    implementation("com.google.firebase:firebase-bom:34.9.0")
+    implementation("com.google.firebase:firebase-auth-ktx:23.2.1")
+    //implementation ("com.firebaseui:firebase-ui-auth:5.0.0") //8
 
 }
