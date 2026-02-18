@@ -20,8 +20,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.mathprojectyehonatan.R;
+import com.example.mathprojectyehonatan.mathproject.MainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
 
 
 public class AddWorker extends Fragment {
@@ -85,6 +88,35 @@ private ImageView imgvi;
                 wrk1.setId(etEnterId.getText().toString());
                 wrk1.setMail(etEnterMail.getText().toString());
                 wrk1.setUri1(uri); //צריך גם פה?
+//                FirebaseFirestore.getInstance().collection(“students").document()
+//
+//                        .set(student1)
+//
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//
+//                            @Override
+//
+//                            public void onSuccess(Void aVoid) {
+//
+//                                Toast.makeText(MainActivity.this,"add student has been
+//
+//                                        success",Toast.LENGTH_SHORT).show();
+//
+//                            }
+//
+//                        }).addOnFailureListener(new OnFailureListener() {
+//
+//                            @Override
+//
+//                            public void onFailure(@NonNull Exception e) {
+//
+//                                Toast.makeText(MainActivity.this,"add student has been
+//
+//                                        failed",Toast.LENGTH_SHORT).show();
+//
+//                            }
+//
+//                        });
             }
         });
         btnAddPictre.setOnClickListener(new View.OnClickListener() {
