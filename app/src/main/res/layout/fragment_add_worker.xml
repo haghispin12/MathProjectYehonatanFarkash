@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".workermanage.AddWorker">
-
-    <!-- TODO: Update blank fragment layout -->
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -49,7 +41,7 @@
             android:gravity="center"
             android:textSize="20dp"
             android:id="@+id/EnterMail"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="20dp"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,8 +62,7 @@
             android:textSize="20dp"
             android:layout_marginBottom="50sp"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/addUser"
+            android:id="@+id/AddWorker"
             android:text="הוספת עובד"
             android:layout_marginTop="20dp"/>
     </LinearLayout>
-</FrameLayout>

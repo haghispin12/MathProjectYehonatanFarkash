@@ -1,5 +1,6 @@
 package com.example.mathprojectyehonatan.workermanage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mathprojectyehonatan.R;
+import com.example.mathprojectyehonatan.mathproject.LoginActivity;
+import com.example.mathprojectyehonatan.mathproject.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -54,6 +57,8 @@ public class MainActivityLogin extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
                         Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivityLogin.this, factorymanager.class);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(MainActivityLogin.this,"failed",Toast.LENGTH_SHORT).show();
                     }
