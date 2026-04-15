@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -25,6 +26,9 @@ import android.widget.Toast;
 import com.example.mathprojectyehonatan.R;
 import com.example.mathprojectyehonatan.mathproject.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class AddWorker extends Fragment {
@@ -83,40 +87,24 @@ private ImageView imgvi;
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                wrk1.setFirstName(etEnterName.getText().toString());
-                wrk1.setLastName(etEnterLastName.getText().toString());
-                wrk1.setId(etEnterId.getText().toString());
-                wrk1.setMail(etEnterMail.getText().toString());
-                wrk1.setUri1(uri); //צריך גם פה?
-//                FirebaseFirestore.getInstance().collection(“students").document()
-//
-//                        .set(student1)
-//
-//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//
-//                            @Override
-//
-//                            public void onSuccess(Void aVoid) {
-//
-//                                Toast.makeText(MainActivity.this,"add student has been
-//
-//                                        success",Toast.LENGTH_SHORT).show();
-//
-//                            }
-//
-//                        }).addOnFailureListener(new OnFailureListener() {
-//
-//                            @Override
-//
-//                            public void onFailure(@NonNull Exception e) {
-//
-//                                Toast.makeText(MainActivity.this,"add student has been
-//
-//                                        failed",Toast.LENGTH_SHORT).show();
-//
-//                            }
-//
-//                        });
+
+                wrk1= new worker(etEnterName.getText().toString(),etEnterLastName.getText().toString(),etEnterId.getText().toString(),etEnterMail.getText().toString(),uri);
+
+                FirebaseFirestore.getInstance().collection("workers")
+
+                        .add(wrk1)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(getActivity(),"add worker has been success",Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getActivity(),"add student has been failed",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                getSupportFragmentManager().beginTransaction().remove( myProfile).commit();
             }
         });
         btnAddPictre.setOnClickListener(new View.OnClickListener() {
