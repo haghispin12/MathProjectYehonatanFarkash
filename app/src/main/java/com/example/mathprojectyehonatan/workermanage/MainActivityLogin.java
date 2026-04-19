@@ -31,6 +31,8 @@ public class MainActivityLogin extends AppCompatActivity {
     private EditText etEmail;
     private EditText etPass;
     private FirebaseAuth auth =  FirebaseAuth.getInstance();
+    private FirebaseAuth auth1 = FirebaseAuth.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,25 @@ public class MainActivityLogin extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
-                        Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivityLogin.this, factorymanager.class);
-                        startActivity(intent);
+                        if (auth1.getCurrentUser() != null) {
+                            if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'b' && auth1.getCurrentUser().getEmail().toString().length() == 15) {//     אם המייל הוא 15 תווים והתו הראשון הוא b -מנהל מפעל
+                                Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivityLogin.this, factorymanager.class);
+                                startActivity(intent);
+                            } else if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'm' && auth1.getCurrentUser().getEmail().toString().length() == 16) {  //אם האות הראשונה היא m והמייל בוארך 16 תווים{ - מאבטח
+                                Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivityLogin.this, EnterWorker.class);
+                                startActivity(intent);
+                            }
+                            } else if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'c'&& auth1.getCurrentUser().getEmail().toString().length() == 17) {
+                            Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivityLogin.this, workerdetails.class);
+                            startActivity(intent);
+                            } else if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'y' && auth1.getCurrentUser().getEmail().toString().length() == 23) {
+                            Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show(); //בעיה לא עובד
+                            Intent intent = new Intent(MainActivityLogin.this, factorymanager.class);
+                            startActivity(intent);
+                        }
                     } else {
                         Toast.makeText(MainActivityLogin.this,"failed",Toast.LENGTH_SHORT).show();
                     }

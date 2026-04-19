@@ -97,6 +97,7 @@ private ImageView imgvi;
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 Toast.makeText(getActivity(),"add worker has been success",Toast.LENGTH_SHORT).show();
+                                getActivity().getSupportFragmentManager().beginTransaction().remove(AddWorker.this).commit();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -104,7 +105,7 @@ private ImageView imgvi;
                                 Toast.makeText(getActivity(),"add student has been failed",Toast.LENGTH_SHORT).show();
                             }
                         });
-                getSupportFragmentManager().beginTransaction().remove( myProfile).commit();
+
             }
         });
         btnAddPictre.setOnClickListener(new View.OnClickListener() {

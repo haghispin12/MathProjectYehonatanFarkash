@@ -12,14 +12,14 @@
         android:id="@+id/nameworker"
         android:textSize="20sp"
         android:textColor="#4CAF50" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50sp"
-            android:textColor="#4CAF50"
-            android:gravity="center"
-            android:background="@color/white"
-            android:id="@+id/idworker"
-            android:textSize="20sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:textColor="#4CAF50"
+        android:gravity="center"
+        android:background="@color/white"
+        android:id="@+id/idworker"
+        android:textSize="20sp"/>
 
     <TextView
         android:layout_width="200sp"
