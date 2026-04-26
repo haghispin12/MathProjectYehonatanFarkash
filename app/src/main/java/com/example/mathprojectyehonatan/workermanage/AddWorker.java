@@ -84,6 +84,7 @@ private ImageView imgvi;
 
 
 
+
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +99,7 @@ private ImageView imgvi;
                             public void onSuccess(DocumentReference documentReference) {
                                 Toast.makeText(getActivity(),"add worker has been success",Toast.LENGTH_SHORT).show();
                                 getActivity().getSupportFragmentManager().beginTransaction().remove(AddWorker.this).commit();
+                                //
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override

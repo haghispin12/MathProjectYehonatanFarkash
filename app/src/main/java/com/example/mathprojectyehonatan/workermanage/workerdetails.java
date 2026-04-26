@@ -1,6 +1,7 @@
 package com.example.mathprojectyehonatan.workermanage;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,8 +11,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mathprojectyehonatan.R;
 
-public class workerdetails extends AppCompatActivity {
 
+public class workerdetails extends AppCompatActivity {
+    private TextView etNameworker;
+    private TextView etIdworker;
+    private TextView etDate;
+    private TextView etEntryTime;
+    private  TextView etDeparturetime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,5 +28,10 @@ public class workerdetails extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+    }
+    private void initviews() {
+        etNameworker = findViewById(R.id.nameworker);
+        etIdworker = findViewById(R.id.idworker);
+
     }
 }
