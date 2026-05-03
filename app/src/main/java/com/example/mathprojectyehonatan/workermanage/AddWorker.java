@@ -58,7 +58,6 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
                 public void onActivityResult(ActivityResult result) {
 
                     if (result.getResultCode() == RESULT_OK) {
-
                         imgvi.setImageURI(uri);
 
                     }

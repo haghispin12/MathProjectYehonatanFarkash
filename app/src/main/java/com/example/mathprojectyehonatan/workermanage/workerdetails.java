@@ -33,11 +33,11 @@ public class workerdetails extends AppCompatActivity {
         etNameworker = findViewById(R.id.nameworker);
         etIdworker = findViewById(R.id.idworker);
         etDate = findViewById(R.id.date);
-
+        etEntryTime = findViewById(R.id.entrytime);
+        etDeparturetime = findViewById(R.id.departuretime);
 
 
         setEtDate(etDate);
-        etIdworker.setText(wrk1.getId());
 
     }
 
