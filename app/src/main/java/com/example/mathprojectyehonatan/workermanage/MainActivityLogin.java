@@ -67,11 +67,11 @@ public class MainActivityLogin extends AppCompatActivity {
                                         Intent intent = new Intent(MainActivityLogin.this, EnterWorker.class);
                                         startActivity(intent);
                                     }
-                                     else if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'c'&& auth1.getCurrentUser().getEmail().toString().length() == 17) {
+                                     else if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'c'&& auth1.getCurrentUser().getEmail().toString().length() == 17) {    // אם האות הראשונה היא c והמייל באורך 17 תווים - עובד
                                         Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(MainActivityLogin.this, workerdetails.class);
                                         startActivity(intent);
-                                    } else if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'y' && auth1.getCurrentUser().getEmail().toString().length() == 23) {
+                                    } else if (auth1.getCurrentUser().getEmail().toString().charAt(0) == 'y' && auth1.getCurrentUser().getEmail().toString().length() == 23) { // אני - yon.f.sh14144@gmail.com, yonyon
                                         Toast.makeText(MainActivityLogin.this, "success", Toast.LENGTH_SHORT).show(); //בעיה לא עובד
                                         Intent intent = new Intent(MainActivityLogin.this, factorymanager.class);
                                         startActivity(intent);

@@ -11,6 +11,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mathprojectyehonatan.R;
 
+import java.time.LocalDate;
+import java.util.Calendar;
+
 
 public class workerdetails extends AppCompatActivity {
     private TextView etNameworker;
@@ -18,20 +21,31 @@ public class workerdetails extends AppCompatActivity {
     private TextView etDate;
     private TextView etEntryTime;
     private  TextView etDeparturetime;
+    private worker wrk1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_workerdetails);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
     }
     private void initviews() {
         etNameworker = findViewById(R.id.nameworker);
         etIdworker = findViewById(R.id.idworker);
+        etDate = findViewById(R.id.date);
 
+
+
+        setEtDate(etDate);
+        etIdworker.setText(wrk1.getId());
+
+    }
+
+    public void setEtDate(TextView etDate) {
+        Calendar cal = Calendar.getInstance();
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        etDate.setText(day+"."+month+"."+year);
     }
 }

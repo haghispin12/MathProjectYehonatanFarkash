@@ -25,8 +25,13 @@ import android.widget.Toast;
 
 import com.example.mathprojectyehonatan.R;
 import com.example.mathprojectyehonatan.mathproject.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -41,6 +46,7 @@ private Button btnAddPictre;
 private Button btnAddWorker;
 private Uri uri;
 private ImageView imgvi;
+private FirebaseAuth auth = FirebaseAuth.getInstance();
     public ActivityResultLauncher<Intent> startCamera = registerForActivityResult(   // האזנה לסגירת startcamera
 
             new ActivityResultContracts.StartActivityForResult(),
@@ -52,8 +58,8 @@ private ImageView imgvi;
                 public void onActivityResult(ActivityResult result) {
 
                     if (result.getResultCode() == RESULT_OK) {
+
                         imgvi.setImageURI(uri);
-                        wrk1.setUri1(uri);
 
                     }
 
@@ -81,35 +87,32 @@ private ImageView imgvi;
         etEnterMail = view.findViewById(R.id.EnterMail);
         btnAddPictre = view.findViewById(R.id.AddPicture);
         btnAddWorker = view.findViewById(R.id.AddWorker);
+        imgvi = view.findViewById(R.id.pctr);
 
 
 
 
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                                            @Override
+                                            public void onClick(View v) {
+                                                auth.createUserWithEmailAndPassword(etEnterMail.getText().toString(), etEnterId.getText().toString()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(getActivity(), "Registration success", Toast.LENGTH_SHORT).show();
+                                                            collection();
+                                                        } else {
 
-                wrk1= new worker(etEnterName.getText().toString(),etEnterLastName.getText().toString(),etEnterId.getText().toString(),etEnterMail.getText().toString(),uri);
+                                                            Toast.makeText(getActivity(), "Registration failed",Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
 
-                FirebaseFirestore.getInstance().collection("workers")
+                                                });
 
-                        .add(wrk1)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(getActivity(),"add worker has been success",Toast.LENGTH_SHORT).show();
-                                getActivity().getSupportFragmentManager().beginTransaction().remove(AddWorker.this).commit();
-                                //
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity(),"add student has been failed",Toast.LENGTH_SHORT).show();
-                            }
-                        });
 
-            }
-        });
+
+                                            }
+                                        });
         btnAddPictre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,5 +133,24 @@ private ImageView imgvi;
             }
         });
     }
+public void collection() {
+    wrk1 = new worker(etEnterName.getText().toString(), etEnterLastName.getText().toString(), etEnterId.getText().toString(), etEnterMail.getText().toString(), uri);
 
+    FirebaseFirestore.getInstance().collection("workers")
+
+            .add(wrk1)
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Toast.makeText(getActivity(), "add worker has been success", Toast.LENGTH_SHORT).show();
+                    getActivity().getSupportFragmentManager().beginTransaction().remove(AddWorker.this).commit();
+                    //
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getActivity(), "add student has been failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+}
 }
