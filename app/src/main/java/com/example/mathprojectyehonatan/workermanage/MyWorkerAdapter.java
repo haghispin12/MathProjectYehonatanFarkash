@@ -1,6 +1,7 @@
 package com.example.mathprojectyehonatan.workermanage;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mathprojectyehonatan.R;
 import com.example.mathprojectyehonatan.mathproject.MyUserAdapter;
-import com.google.firebase.firestore.core.View;
 
 import java.util.ArrayList;
 
@@ -31,8 +31,9 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
     @NonNull
     @Override
     public MyWorkerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemworker,parent,false);
-                return new MyUserAdapter.MyViewHolder(view);
+        android.view.View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.itemworker, parent, false);
+
+        return new MyWorkerAdapter.MyViewHolder(view);
     }
 
     @Override
