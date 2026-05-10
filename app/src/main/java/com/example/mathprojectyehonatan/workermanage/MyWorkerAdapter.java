@@ -37,7 +37,7 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyWorkerAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyWorkerAdapter.MyViewHolder holder, int position) { //לוקחת אובייקט מהמערך בהתאם לגלילה של המשתמש
             holder.bind(workers.get(position),listener);
     }
 
@@ -47,23 +47,23 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
     }
 
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class MyViewHolder extends RecyclerView.ViewHolder{ //מייצר את המפגש בין המערך לתבנית שבנינו(item)
 
        private TextView TvFullName;
        private TextView TvId;
        private   ImageView IvWorkerImg;
 
-        public MyViewHolder(@NonNull android.view.View itemView) {
+        public MyViewHolder(@NonNull android.view.View itemView) {//מייבא את התבנית
             super(itemView);
             TvFullName = itemView.findViewById(R.id.fullName);
             TvId = itemView.findViewById(R.id.id);
             IvWorkerImg = itemView.findViewById(R.id.pictre);
         }
-        public void bind(final worker item, final InterOnWorkerClickListener listener) {
+        public void bind(final worker item, final InterOnWorkerClickListener listener) { //מייצרת את המפגש בין המערך לתבניות
             TvFullName.setText(item.getFirstName()+ " " + item.getLastName());
             TvId.setText(item.getId());
          //   IvWorkerImg.setImageResource(item.);
-            itemView.setOnClickListener(new android.view.View.OnClickListener() {
+            itemView.setOnClickListener(new android.view.View.OnClickListener() { //מה קורה כשלוחצים על אחד מהפריטים ברשימה
                 @Override
                 public void onClick(android.view.View v) {
                     listener.OnWorkerClick(item);

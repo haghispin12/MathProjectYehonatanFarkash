@@ -11,6 +11,9 @@ public class worker {
     public worker(String firstName, String lastName, String id, String mail, Uri uri) {
         this.FirstName = firstName; this.LastName = lastName; this.id = id;this.mail = mail;this.uri1 = uri;
     }
+    public worker(String firstName, String lastName, String id) {
+        this.FirstName =firstName; this.LastName = lastName; this.id =id;
+    }
     public void setFirstName(String firstName) {
         this.FirstName = firstName;
     }
