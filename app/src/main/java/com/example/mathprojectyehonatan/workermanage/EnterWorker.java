@@ -1,6 +1,8 @@
 package com.example.mathprojectyehonatan.workermanage;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.mathprojectyehonatan.R;
 
 public class EnterWorker extends AppCompatActivity {
+
+    private Button btnIdScann;
+    private Button btnEntereWorker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,4 +29,22 @@ public class EnterWorker extends AppCompatActivity {
             return insets;
         });
     }
+    private void initviews() {
+        btnIdScann = findViewById(R.id.idScann);
+        btnEntereWorker = findViewById(R.id.EntereWorker);
+
+        btnIdScann.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        btnEntereWorker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
 }

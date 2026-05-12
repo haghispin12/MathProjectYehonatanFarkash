@@ -21,5 +21,13 @@
         android:layout_height="100sp"
         android:layout_marginTop="100dp"
         android:layout_gravity="center"/>
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:text="ביצוע כניסה"
+        android:textSize="20sp"
+        android:id="@+id/EntereWorker"/>
 
 </LinearLayout>
