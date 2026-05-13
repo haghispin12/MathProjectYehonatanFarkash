@@ -49,5 +49,15 @@ dependencies {
     implementation("com.google.firebase:firebase-bom:34.9.0")
     implementation("com.google.firebase:firebase-auth-ktx:23.2.1")
     //implementation ("com.firebaseui:firebase-ui-auth:5.0.0") //8
+    dependencies {
+        // ספריית ה-SDK של Google AI ל-Java/Android
+        implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+        // במידה והקוד שצירפת מסתמך על ה-Java SDK הגנרי (genai), וודא שהוספת אותו ב-libs או דרך Maven
+    }
+    dependencies {
+        // זה ה-SDK החדש של Google GenAI עבור Java/Android
+        implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    }
 
 }
