@@ -23,7 +23,8 @@ public class GoogleAiClient {
     // הופך את הפונקציה לסטטית כדי שיהיה אפשר לקרוא לה מכל מקום בלי ליצור Object
     public static void extractIdStatic(String apiKey, Bitmap idImage, ResponseCallback callback) {
 
-        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", apiKey);
+        GenerativeModel gm =
+                new GenerativeModel("gemini-pro", apiKey);
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         Content content = new Content.Builder()
@@ -46,7 +47,10 @@ public class GoogleAiClient {
 
             @Override
             public void onFailure(Throwable t) {
-                callback.onError(t.getMessage());
+
+                t.printStackTrace();
+
+                callback.onError(t.toString());
             }
         }, mainExecutor);
     }
