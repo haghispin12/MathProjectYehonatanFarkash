@@ -99,7 +99,7 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
                                                 auth.createUserWithEmailAndPassword(etEnterMail.getText().toString(), etEnterId.getText().toString()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                                        if (task.isSuccessful()) {
+                                                        if (task.isSuccessful()) { // אם יש הצלחה בחיבור לאינטרנט ויש חיבור שהצליח עם הfirebase
                                                             Toast.makeText(getActivity(), "Registration success", Toast.LENGTH_SHORT).show();
                                                             collection();
                                                         } else {

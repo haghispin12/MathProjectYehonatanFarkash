@@ -1,0 +1,115 @@
+@startuml
+interface com.example.mathprojectyehonatan.workermanage.InterOnWorkerClickListener {
+~ void OnWorkerClick(worker)
+}
+
+class com.example.mathprojectyehonatan.workermanage.worker {
+- String FirstName
+- String LastName
+- String id
+- String mail
+- String factoryNumber
++ void setFirstName(String)
++ void setLastName(String)
++ void setId(String)
++ void setMail(String)
++ String getFirstName()
++ String getLastName()
++ String getId()
++ String getMail()
+}
+
+
+class com.example.mathprojectyehonatan.workermanage.MainActivityLogin {
+- Button btnLogin
+- EditText etEmail
+- EditText etPass
+- FirebaseAuth auth1
+# void onCreate(Bundle)
+- void initviews()
+# void onPause()
+- void loginTospecificActivity()
+}
+
+
+class com.example.mathprojectyehonatan.workermanage.factorymanager {
+- Button btnAddWorker
+- worker wrk1
+- RecyclerView rcShowWorker
+~ ArrayList<worker> workers
+# void onCreate(Bundle)
+- void initviews()
++ void DataRetrievalFirestore()
++ void connectionAdapter()
+}
+
+
+class com.example.mathprojectyehonatan.workermanage.EnterWorker {
+- Button btnIdScann
+- Button btnEntereWorker
+- Uri uri
++ ActivityResultLauncher<Intent> startCamera
+# void onCreate(Bundle)
+- void initviews()
+}
+
+
+class com.example.mathprojectyehonatan.workermanage.GoogleAiClient {
++ {static} void extractIdStatic(String,Bitmap,ResponseCallback)
+}
+
+interface com.example.mathprojectyehonatan.workermanage.GoogleAiClient$ResponseCallback {
+~ void onSuccess(String)
+~ void onError(String)
+}
+
+class com.example.mathprojectyehonatan.workermanage.AddWorker {
+- worker wrk1
+- EditText etEnterId
+- EditText etEnterName
+- EditText etEnterFactoryNumbr
+- EditText etEnterLastName
+- EditText etEnterMail
+- Button btnAddPictre
+- Button btnAddWorker
+- Uri uri
+- ImageView imgvi
+- FirebaseAuth auth
++ ActivityResultLauncher<Intent> startCamera
++ void onCreate(Bundle)
++ View onCreateView(LayoutInflater,ViewGroup,Bundle)
+- void initviews(View)
++ void collection()
+}
+
+
+class com.example.mathprojectyehonatan.workermanage.MyWorkerAdapter {
+- ArrayList<worker> workers
+- InterOnWorkerClickListener listener
+- TextView TvFullName
+- TextView tvId
++ MyWorkerAdapter.MyViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(MyWorkerAdapter.MyViewHolder,int)
++ int getItemCount()
+}
+
+
+class com.example.mathprojectyehonatan.workermanage.MyWorkerAdapter$MyViewHolder {
+- TextView TvFullName
+- TextView TvId
+- ImageView IvWorkerImg
++ void bind(worker,InterOnWorkerClickListener)
+}
+
+
+
+
+androidx.appcompat.app.AppCompatActivity <|-- com.example.mathprojectyehonatan.workermanage.MainActivityLogin
+androidx.appcompat.app.AppCompatActivity <|-- com.example.mathprojectyehonatan.workermanage.factorymanager
+androidx.appcompat.app.AppCompatActivity <|-- com.example.mathprojectyehonatan.workermanage.EnterWorker
+com.example.mathprojectyehonatan.workermanage.GoogleAiClient +.. com.example.mathprojectyehonatan.workermanage.GoogleAiClient$ResponseCallback
+androidx.fragment.app.Fragment <|-- com.example.mathprojectyehonatan.workermanage.AddWorker
+com.example.mathprojectyehonatan.workermanage.Adapter <|-- com.example.mathprojectyehonatan.workermanage.MyWorkerAdapter
+com.example.mathprojectyehonatan.workermanage.MyWorkerAdapter +.. com.example.mathprojectyehonatan.workermanage.MyWorkerAdapter$MyViewHolder
+com.example.mathprojectyehonatan.workermanage.ViewHolder <|-- com.example.mathprojectyehonatan.workermanage.MyWorkerAdapter$MyViewHolder
+@enduml
