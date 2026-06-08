@@ -40,6 +40,7 @@ public class AddWorker extends Fragment {
 private worker wrk1;
 private EditText etEnterId;
 private EditText etEnterName;
+private EditText etEnterFactoryNumbr;
 private EditText etEnterLastName;
 private EditText etEnterMail;
 private Button btnAddPictre;
@@ -84,9 +85,10 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
         etEnterName = view.findViewById(R.id.EnterName);
         etEnterLastName = view.findViewById(R.id.EnterLastName);
         etEnterMail = view.findViewById(R.id.EnterMail);
-        btnAddPictre = view.findViewById(R.id.AddPicture);
+        etEnterFactoryNumbr = view.findViewById(R.id.enterNumFactory);
+   //     btnAddPictre = view.findViewById(R.id.AddPicture);
         btnAddWorker = view.findViewById(R.id.AddWorker);
-        imgvi = view.findViewById(R.id.pctr);
+ //       imgvi = view.findViewById(R.id.pctr);
 
 
 
@@ -133,7 +135,7 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
         });
     }
 public void collection() {
-    wrk1 = new worker(etEnterName.getText().toString(), etEnterLastName.getText().toString(), etEnterId.getText().toString(), etEnterMail.getText().toString(), uri);
+    wrk1 = new worker(etEnterName.getText().toString(), etEnterLastName.getText().toString(), etEnterId.getText().toString(), etEnterMail.getText().toString(),etEnterFactoryNumbr.getText().toString() );
 
     FirebaseFirestore.getInstance().collection("workers")
 
