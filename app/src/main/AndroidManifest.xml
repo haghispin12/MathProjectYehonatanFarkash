@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MathProjectYehonatan"
         tools:targetApi="31">
+
 <!--        <activity-->
 <!--            android:name=".workermanage.workerdetails"-->
 <!--            android:exported="false" />-->

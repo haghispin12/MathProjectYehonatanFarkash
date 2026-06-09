@@ -114,25 +114,25 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
 
                                             }
                                         });
-        btnAddPictre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ContentValues values = new ContentValues();
-
-                values.put(MediaStore.Images.Media.TITLE, "New Picture");
-
-                values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
-
-                uri =
-                        requireContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
-                startCamera.launch(cameraIntent);
-            }
-        });
+//        btnAddPictre.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ContentValues values = new ContentValues();
+//
+//                values.put(MediaStore.Images.Media.TITLE, "New Picture");
+//
+//                values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera");
+//
+//                uri =
+//                        requireContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//
+//                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//
+//                startCamera.launch(cameraIntent);
+//            }
+//        });
     }
 public void collection() {
     wrk1 = new worker(etEnterName.getText().toString(), etEnterLastName.getText().toString(), etEnterId.getText().toString(), etEnterMail.getText().toString(),etEnterFactoryNumbr.getText().toString() );

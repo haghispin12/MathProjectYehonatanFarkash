@@ -7,7 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+    android:background="@android:color/white"
+    android:clickable="true"
+    android:focusable="true">
 
 
         <EditText
@@ -51,21 +54,6 @@
                 android:textSize="20dp"
                 android:id="@+id/enterNumFactory"
                 android:layout_marginTop="20dp"/>
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="הוספת תמונה"-->
-<!--            android:textSize="20sp"-->
-<!--            android:id="@+id/AddPicture"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="20dp"/>-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/pctr"-->
-<!--            android:layout_width="120dp"-->
-<!--            android:layout_height="120dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="20dp" />-->
 
         <Button
             android:layout_width="wrap_content"
