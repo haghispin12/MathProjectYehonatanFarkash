@@ -18,6 +18,15 @@
         android:layout_marginTop="10sp"
         android:text="הוספת עובד"
         android:textSize="15dp" />
+<!--    תיבת חיפוש לrecycleview-->
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="חפש לפי שם או תעודת זהות..."
+        android:inputType="text"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

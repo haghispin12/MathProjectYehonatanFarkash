@@ -41,10 +41,10 @@ public class MainActivityLogin extends AppCompatActivity {
         initviews();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         auth1 = FirebaseAuth.getInstance();
-//        if(auth1.getCurrentUser()!=null){
-//            loginTospecificActivity();
-//            int n=0;
-//        }
+        if(auth1.getCurrentUser()!=null){
+            loginTospecificActivity();
+            int n=0;
+        }
         int n =0;
 
 

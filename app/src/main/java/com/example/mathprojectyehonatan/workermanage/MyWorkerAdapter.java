@@ -71,5 +71,10 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
             });
         }
     }
+    // פונקציה חדשה לעדכון הרשימה לאחר סינון החיפוש
+    public void filterList(ArrayList<worker> filteredList) {
+        this.workers = filteredList; // מחליף את הרשימה הישנה ברשימה המסוננת
+        notifyDataSetChanged(); // מעדכן את המסך בשינויים
+    }
 
 }
