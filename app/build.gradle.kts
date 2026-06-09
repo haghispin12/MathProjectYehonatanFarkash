@@ -43,6 +43,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.0")
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
     implementation("com.google.firebase:firebase-analytics")
     //implementation ("com.google.firebase:firebase-auth-ktx:20.0.1")
@@ -55,12 +56,11 @@ dependencies {
 
         // במידה והקוד שצירפת מסתמך על ה-Java SDK הגנרי (genai), וודא שהוספת אותו ב-libs או דרך Maven
     }
-    dependencies {
+
         // זה ה-SDK החדש של Google GenAI עבור Java/Android
         implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
 
-        
-    }
+
 
 }

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- הרשאה לפתיחת המצלמה של המכשיר לצורך סריקת תעודת הזהות -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,9 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MathProjectYehonatan"
         tools:targetApi="31">
-        <activity
-            android:name=".workermanage.workerdetails"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".workermanage.workerdetails"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".workermanage.EnterWorker"
             android:exported="false" />
