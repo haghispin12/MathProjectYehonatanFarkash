@@ -45,19 +45,18 @@ public class MyUserAdapter extends RecyclerView.Adapter<MyUserAdapter.MyViewHold
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView tvUserName;
         TextView tvGrade;
-        ImageView ivUserImg;
+
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tvUserName = itemView.findViewById(R.id.name);
             tvGrade = itemView.findViewById(R.id.grade);
-            ivUserImg = itemView.findViewById(R.id.pictre);
+
         }
 
         public void bind (final User item, final  MyInterOnItemClickListener listener) {
             tvUserName.setText((item.getUserName()));
             tvGrade.setText(item.getScore()+"");
-            ivUserImg.setImageBitmap(item.getBitm());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

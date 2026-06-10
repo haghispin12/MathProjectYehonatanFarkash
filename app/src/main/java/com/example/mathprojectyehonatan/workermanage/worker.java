@@ -9,6 +9,11 @@ public class worker {
    // private Uri uri1;
     private String mail;
     private String factoryNumber;
+    private boolean isEntered;
+    private String entryTime;
+    private String exitTime;
+
+    private String lastEntryDate; // שומר את התאריך (למשל: "2026-06-10")
 
     public worker(String firstName, String lastName, String id, String mail, String factoryNumber) {
         this.FirstName = firstName; this.LastName = lastName; this.id = id;this.mail = mail;
@@ -45,11 +50,19 @@ public class worker {
         return id;
     }
 
-//    public Uri getUri1() {
-//        return uri1;
-//    }
 
     public String getMail() {
         return mail;
     }
+    public boolean isEntered() { return isEntered; }
+    public void setEntered(boolean entered) { isEntered = entered; }
+
+    public String getEntryTime() { return entryTime; }
+    public void setEntryTime(String entryTime) { this.entryTime = entryTime; }
+
+    public String getLastEntryDate() { return lastEntryDate; }
+    public void setLastEntryDate(String lastEntryDate) { this.lastEntryDate = lastEntryDate; }
+    public String getExitTime() { return exitTime; }
+    public void setExitTime(String exitTime) { this.exitTime = exitTime; }
 }
+
