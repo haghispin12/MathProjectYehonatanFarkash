@@ -86,9 +86,8 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
         etEnterLastName = view.findViewById(R.id.EnterLastName);
         etEnterMail = view.findViewById(R.id.EnterMail);
         etEnterFactoryNumbr = view.findViewById(R.id.enterNumFactory);
-   //     btnAddPictre = view.findViewById(R.id.AddPicture);
         btnAddWorker = view.findViewById(R.id.AddWorker);
- //       imgvi = view.findViewById(R.id.pctr);
+;
 
 
 
@@ -96,7 +95,7 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                auth.createUserWithEmailAndPassword(etEnterMail.getText().toString(), etEnterId.getText().toString()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                                auth.createUserWithEmailAndPassword(etEnterMail.getText().toString().trim(), etEnterId.getText().toString()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                                         if (task.isSuccessful()) { // אם יש הצלחה בחיבור לאינטרנט ויש חיבור שהצליח עם הfirebase
@@ -104,7 +103,7 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
                                                             collection();
                                                         } else {
 
-                                                            Toast.makeText(getActivity(), "Registration failed",Toast.LENGTH_SHORT).show();
+                                                              Toast.makeText(getActivity(), "Registration failed",Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
 
@@ -117,6 +116,7 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
 
     }
 public void collection() {
+    Toast.makeText(getActivity(), "Debug Factory: " + etEnterFactoryNumbr.getText().toString(), Toast.LENGTH_SHORT).show();
     wrk1 = new worker(etEnterName.getText().toString(), etEnterLastName.getText().toString(), etEnterId.getText().toString(), etEnterMail.getText().toString(),etEnterFactoryNumbr.getText().toString() );
 
     FirebaseFirestore.getInstance().collection("workers")
@@ -129,6 +129,7 @@ public void collection() {
                     getActivity().getSupportFragmentManager().beginTransaction().remove(AddWorker.this).commit();
                     //
                 }
+
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {

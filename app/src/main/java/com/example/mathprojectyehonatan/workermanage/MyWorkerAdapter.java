@@ -51,7 +51,8 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
         private ImageView IvWorkerImg;
         private TextView TvStatus;
         private TextView TvEntryTime;
-        private TextView TvExitTime; // משתנה חדש עבור תצוגת שעת היציאה
+        private TextView TvExitTime;
+        private TextView TvFactoryNumber;
 
         public MyViewHolder(@NonNull android.view.View itemView) {
             super(itemView);
@@ -59,7 +60,8 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
             TvId = itemView.findViewById(R.id.id);
             TvStatus = itemView.findViewById(R.id.tvStatus);
             TvEntryTime = itemView.findViewById(R.id.tvEntryTime);
-            TvExitTime = itemView.findViewById(R.id.tvExitTime); // קישור לרכיב הגרפי החדש ב-XML
+            TvExitTime = itemView.findViewById(R.id.tvExitTime);
+            TvFactoryNumber = itemView.findViewById(R.id.tvFactoryNumber);
         }
 
         public void bind(final worker item, final InterOnWorkerClickListener listener) {
@@ -71,7 +73,7 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
 
             // הצגת שעת היציאה (אם קיימת בענן, תוצג השעה. אם לא, יופיעו קווים)
             TvExitTime.setText("שעת יציאה אחרונה: " + (item.getExitTime() != null ? item.getExitTime() : "--:--"));
-
+            TvFactoryNumber.setText("מספר מפעל: " + (item.getFactoryNumber()!= null ? item.getFactoryNumber() : "--")) ;
             if (item.isEntered()) {
                 TvStatus.setText("סטטוס: במפעל");
                 TvStatus.setTextColor(android.graphics.Color.parseColor("#25D366"));

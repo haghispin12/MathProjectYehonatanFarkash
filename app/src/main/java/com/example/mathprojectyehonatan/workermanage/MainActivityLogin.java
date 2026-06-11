@@ -33,10 +33,10 @@ public class MainActivityLogin extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         auth1 = FirebaseAuth.getInstance();
 
-//        if(auth1.getCurrentUser()!=null){
-//            loginTospecificActivity();
-//            int n=0;
-//        }
+        if(auth1.getCurrentUser()!=null){
+            loginTospecificActivity();
+            int n=0;
+        }
 
     }
 
@@ -99,7 +99,7 @@ public class MainActivityLogin extends AppCompatActivity {
         // האדמין הראשי / יונתן
         else if (email.charAt(0) == 'y' && email.length() == 23) {
             Toast.makeText(MainActivityLogin.this, "התחברות מנהל הצליחה", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivityLogin.this, factorymanager.class);
+            Intent intent = new Intent(MainActivityLogin.this, areaManager.class);
             startActivity(intent);
         } else {
             Toast.makeText(MainActivityLogin.this, "המייל אינו תואם להגדרות המערכת", Toast.LENGTH_SHORT).show();

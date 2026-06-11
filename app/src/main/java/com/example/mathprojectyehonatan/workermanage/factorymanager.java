@@ -149,12 +149,15 @@ public class factorymanager extends AppCompatActivity {
                                 boolean isEntered = documentSnapshot.getBoolean("isEntered") != null ? documentSnapshot.getBoolean("isEntered") : false;
                                 String entryTime = documentSnapshot.getString("entryTime");
                                 String exitTime = documentSnapshot.getString("exitTime");
+                                String factoryNumber = documentSnapshot.getString("factoryNumber");
+
 
                                 // יצירת אובייקט עובד חדש והגדרת הנתונים שלו
                                 worker worker1 = new worker(firstName, lastName, id);
                                 worker1.setEntered(isEntered);
                                 worker1.setEntryTime(entryTime);
                                 worker1.setExitTime(exitTime);
+                                worker1.setFactoryNumber(factoryNumber);
 
                                 // הוספת העובד לרשימה שתוצג למנהל
                                 workers.add(worker1);
