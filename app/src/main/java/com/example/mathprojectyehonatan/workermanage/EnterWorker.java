@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 // יבוא קובץ ה-R של הפרויקט (המקשר בין הקוד הלוגי לעיצוב ה-XML)
 import com.example.mathprojectyehonatan.R;
+import com.google.firebase.auth.FirebaseAuth;
 // יבוא ספריות לחיפוש ותואם תבניות טקסט (Regex)
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,7 +101,8 @@ public class EnterWorker extends AppCompatActivity {
         // קישור כפתור כניסת עובד לפי ה-ID שלו ב-XML
         btnEntereWorker = findViewById(R.id.EntereWorker);
         btnExitWorker = findViewById(R.id.ExitWorker);
-
+// חיבור ההתנתקות לכפתור סריקה (מכיוון שזה הכפתור שיש לך פה)
+        setupLogoutGesture(btnIdScann);
         // הגדרת פעולה שתתבצע ברגע שהמשתמש לוחץ על כפתור הסריקה
         btnIdScann.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,12 +318,13 @@ public class EnterWorker extends AppCompatActivity {
                 });
     }
 
-    // פונקציה חדשה לחלוטין שמבצעת את רישום הכניסה החכם ומגנה על השעה הראשונה/**
-    //     * פונקציה חכמה לרישום כניסת עובד למפעל.
-    //     * המנגנון מונע דריסה של שעת הכניסה המקורית מהבוקר במקרה של לחיצות כפולות או כניסות חוזרות באותו היום.
-    //     * * @param docId ID-ה הייחודי של מסמך העובד בתוך ה-Collection ב-Firestore
-    //     * @param workerName שם העובד (לצורך הצגה בהודעות Toast)
-     private void registerWorkerEntry(String docId, String workerName) {
+    /**
+     * פונקציה חכמה לרישום כניסת עובד למפעל.
+     * המנגנון מונע דריסה של שעת הכניסה המקורית מהבוקר במקרה של לחיצות כפולות או כניסות חוזרות באותו היום.
+     * * @param docId ID-ה הייחודי של מסמך העובד בתוך ה-Collection ב-Firestore
+     * @param workerName שם העובד (לצורך הצגה בהודעות Toast)
+     */
+    private void registerWorkerEntry(String docId, String workerName) {
         com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
 
         // חילוץ תאריך ושעה נוכחיים
@@ -386,5 +389,39 @@ public class EnterWorker extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "שגיאה ברישום היציאה: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+    /**
+     * פונקציית עזר להוספת "דלת אחורית" להתנתקות בלחיצה ארוכה.
+     * הלחיצה הארוכה מבטיחה שהמשתמש לא יתנתק בטעות מפעולה רגילה בכפתור.
+     *
+     * @param view הרכיב (כפתור/אייקון) שעל גביו נפעיל את מנגנון ההתנתקות.
+     */
+    private void setupLogoutGesture(View view) {
+        // הגדרת מאזין ללחיצה ארוכה (Long Click) על הכפתור
+        view.setOnLongClickListener(v -> {
+
+            // 1. התנתקות מפיירבייס: מחיקת פרטי המשתמש הנוכחי מהזיכרון של המכשיר ומהחיבור לשרת
+            FirebaseAuth.getInstance().signOut();
+
+            // 2. יצירת Intent למעבר למסך ההתחברות (MainActivityLogin)
+            Intent intent = new Intent(EnterWorker.this, MainActivityLogin.class);
+
+            // 3. הגדרת דגלים (Flags) למניעת חזרה לאחור:
+            // FLAG_ACTIVITY_NEW_TASK: פותח את מסך ההתחברות כמשימה חדשה.
+            // FLAG_ACTIVITY_CLEAR_TASK: מוחק את כל המסכים הקודמים (סטק הפעילויות) מהזיכרון.
+            // זה קריטי כדי שבלחיצה על "חזור" בטלפון, המשתמש לא יחזור למסך הניהול.
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            // 4. הפעלת מסך ההתחברות וסגירת המסך הנוכחי (finish) מהזיכרון
+            startActivity(intent);
+            finish();
+
+            // 5. חיווי ויזואלי למשתמש שהפעולה הצליחה
+            Toast.makeText(EnterWorker.this, "התנתקת בהצלחה!", Toast.LENGTH_SHORT).show();
+
+            // 6. מחזירים true כדי לציין למערכת שהלחיצה הארוכה טופלה במלואה,
+            // ובכך אנחנו מונעים הפעלה של לחיצה רגילה (OnClick) במקביל.
+            return true;
+        });
     }
 }

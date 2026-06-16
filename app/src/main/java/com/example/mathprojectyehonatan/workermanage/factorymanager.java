@@ -58,13 +58,16 @@ public class factorymanager extends AppCompatActivity {
     private void initviews() {
         btnAddWorker = findViewById(R.id.addWorker);
         rcShowWorker = findViewById(R.id.recycle);
-
+// חיבור ההתנתקות לכפתור הוספת העובד (מכיוון שזה הכפתור שיש לך פה)
+        setupLogoutGesture(btnAddWorker);
         // לחיצה על כפתור הוספת עובד - פותחת את ה-Fragment המתאים
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 AddWorker fragment = new AddWorker();
                 getSupportFragmentManager().beginTransaction().replace(R.id.FrAddWorker, fragment, "anyTagName").addToBackStack(null).commit();
+
             }
         });
 
@@ -295,7 +298,40 @@ public class factorymanager extends AppCompatActivity {
         if (am != null) {
             am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
-    }
-    // --- זה חייב להיות בסוף הקלאס, לפני הסוגר האחרון שלו ---
 
+    }
+    /**
+     * פונקציית עזר להוספת "דלת אחורית" להתנתקות בלחיצה ארוכה.
+     * הלחיצה הארוכה מבטיחה שהמשתמש לא יתנתק בטעות מפעולה רגילה בכפתור.
+     *
+     * @param view הרכיב (כפתור/אייקון) שעל גביו נפעיל את מנגנון ההתנתקות.
+     */
+    private void setupLogoutGesture(View view) {
+        // הגדרת מאזין ללחיצה ארוכה (Long Click) על הכפתור
+        view.setOnLongClickListener(v -> {
+
+            // 1. התנתקות מפיירבייס: מחיקת פרטי המשתמש הנוכחי מהזיכרון של המכשיר ומהחיבור לשרת
+            FirebaseAuth.getInstance().signOut();
+
+            // 2. יצירת Intent למעבר למסך ההתחברות (MainActivityLogin)
+            Intent intent = new Intent(factorymanager.this, MainActivityLogin.class);
+
+            // 3. הגדרת דגלים (Flags) למניעת חזרה לאחור:
+            // FLAG_ACTIVITY_NEW_TASK: פותח את מסך ההתחברות כמשימה חדשה.
+            // FLAG_ACTIVITY_CLEAR_TASK: מוחק את כל המסכים הקודמים (סטק הפעילויות) מהזיכרון.
+            // זה קריטי כדי שבלחיצה על "חזור" בטלפון, המשתמש לא יחזור למסך הניהול.
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            // 4. הפעלת מסך ההתחברות וסגירת המסך הנוכחי (finish) מהזיכרון
+            startActivity(intent);
+            finish();
+
+            // 5. חיווי ויזואלי למשתמש שהפעולה הצליחה
+            Toast.makeText(factorymanager.this, "התנתקת בהצלחה!", Toast.LENGTH_SHORT).show();
+
+            // 6. מחזירים true כדי לציין למערכת שהלחיצה הארוכה טופלה במלואה,
+            // ובכך אנחנו מונעים הפעלה של לחיצה רגילה (OnClick) במקביל.
+            return true;
+        });
+    }
 }

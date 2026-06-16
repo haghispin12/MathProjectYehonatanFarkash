@@ -1,9 +1,12 @@
 package com.example.mathprojectyehonatan.workermanage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mathprojectyehonatan.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -126,4 +130,38 @@ popAllworkersFromFiresroe();
             //שליחת הרשימה המסוננת לאדפטר כדי שיצייר אותה מחדש על המסך
                  allWorkersAdapter.filterList(filteredList);
                 }
+    /**
+     * פונקציית עזר להוספת "דלת אחורית" להתנתקות בלחיצה ארוכה.
+     * הלחיצה הארוכה מבטיחה שהמשתמש לא יתנתק בטעות מפעולה רגילה בכפתור.
+     *
+     * @param view הרכיב (כפתור/אייקון) שעל גביו נפעיל את מנגנון ההתנתקות.
+     */
+    private void setupLogoutGesture(View view) {
+        // הגדרת מאזין ללחיצה ארוכה (Long Click) באמצעות Anonymous Class
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                // 1. התנתקות מפיירבייס
+                FirebaseAuth.getInstance().signOut();
+
+                // 2. יצירת Intent למעבר למסך ההתחברות (MainActivityLogin)
+                // שים לב: אנחנו משתמשים ב-EnterWorker.this כדי לציין את ההקשר (Context) של המחלקה
+                Intent intent = new Intent(areaManager.this, MainActivityLogin.class);
+
+                // 3. הגדרת דגלים (Flags) למניעת חזרה לאחור
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                // 4. הפעלת מסך ההתחברות וסגירת המסך הנוכחי
+                startActivity(intent);
+                finish();
+
+                // 5. חיווי ויזואלי למשתמש
+                Toast.makeText(areaManager.this, "התנתקת בהצלחה!", Toast.LENGTH_SHORT).show();
+
+                // 6. מחזירים true כדי לציין שהלחיצה טופלה בהצלחה
+                return true;
+            }
+        });
+    }
         }
