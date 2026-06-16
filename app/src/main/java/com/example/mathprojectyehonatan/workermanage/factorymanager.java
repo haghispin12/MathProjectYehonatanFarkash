@@ -141,6 +141,18 @@ public class factorymanager extends AppCompatActivity {
 
                     // אם חזרו נתונים מהענן
                     if (queryDocumentSnapshots != null) {
+
+                        // --- התחלת קוד האיפוס היומי (שומר על ההערות שלך בהמשך) ---
+                        String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
+                        android.content.SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+                        String lastResetDate = prefs.getString("last_reset_date", "");
+
+                        if (!today.equals(lastResetDate)) {
+                            performDailyReset(queryDocumentSnapshots);
+                            prefs.edit().putString("last_reset_date", today).apply();
+                        }
+                        // --- סוף קוד האיפוס היומי ---
+
                         workers.clear(); // מנקים רשימה קיימת כדי שלא יהיו כפילויות במסך
 
                         // עוברים אחד-אחד על המסמכים שחזרו מהענן
@@ -176,6 +188,21 @@ public class factorymanager extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    // פונקציית עזר לאיפוס יומי
+    private void performDailyReset(QuerySnapshot querySnapshot) {
+        com.google.firebase.firestore.WriteBatch batch = FirebaseFirestore.getInstance().batch();
+
+        for (DocumentSnapshot doc : querySnapshot) {
+            // מאפסים את שעת היציאה ל-00:00 במידה ויש ערך
+            if (doc.getString("exitTime") != null) {
+                batch.update(doc.getReference(), "exitTime", "טרם יצא");
+            }
+        }
+
+        batch.commit().addOnSuccessListener(aVoid ->
+                android.util.Log.d("Reset", "הנתונים אופסו ליום חדש!")
+        );
     }
 
     /**

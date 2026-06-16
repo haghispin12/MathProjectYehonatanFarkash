@@ -74,14 +74,23 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
 
             // הצגת שעת כניסה
             TvEntryTime.setText("שעת כניסה ראשונה: " + (item.getEntryTime() != null ? item.getEntryTime() : "--:--"));
+            String exitTime = item.getExitTime();
+            // בדיקה האם אין שעת יציאה רשומה (null, ערך מאופס, או מחרוזת ריקה)
+            if (exitTime == null || exitTime.equals("00:00") || exitTime.equals("טרם יצא") || exitTime.isEmpty()) {
+                // אם העובד טרם יצא או שהנתונים אופסו, נציג הודעה ברורה למשתמש
+                TvExitTime.setText("שעת יציאה אחרונה: טרם יצא");
+            } else {
+                // אם קיימת שעת יציאה אמיתית, נציג אותה כפי שהיא
+                TvExitTime.setText("שעת יציאה אחרונה: " + exitTime);
+            }
 
-            // הצגת שעת היציאה (אם קיימת בענן, תוצג השעה. אם לא, יופיעו קווים)
-            TvExitTime.setText("שעת יציאה אחרונה: " + (item.getExitTime() != null ? item.getExitTime() : "--:--"));
-            TvFactoryNumber.setText("מספר מפעל: " + (item.getFactoryNumber()!= null ? item.getFactoryNumber() : "--")) ;
+            // בדיקה לפי המשתנה הבוליאני (true/false) אם העובד נמצא כרגע במפעל
             if (item.isEntered()) {
+                // אם העובד בפנים - נעדכן את הטקסט ונצבע אותו בירוק
                 TvStatus.setText("סטטוס: במפעל");
                 TvStatus.setTextColor(android.graphics.Color.parseColor("#25D366"));
             } else {
+                // אם העובד בחוץ - נעדכן את הטקסט ונצבע אותו באדום
                 TvStatus.setText("סטטוס: מחוץ למפעל");
                 TvStatus.setTextColor(android.graphics.Color.RED);
             }
