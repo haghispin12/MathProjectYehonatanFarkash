@@ -74,6 +74,7 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
 
             // הצגת שעת כניסה
             TvEntryTime.setText("שעת כניסה ראשונה: " + (item.getEntryTime() != null ? item.getEntryTime() : "--:--"));
+
             String exitTime = item.getExitTime();
             // בדיקה האם אין שעת יציאה רשומה (null, ערך מאופס, או מחרוזת ריקה)
             if (exitTime == null || exitTime.equals("00:00") || exitTime.equals("טרם יצא") || exitTime.isEmpty()) {

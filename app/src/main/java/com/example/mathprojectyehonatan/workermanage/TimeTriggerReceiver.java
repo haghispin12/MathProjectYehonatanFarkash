@@ -22,21 +22,30 @@ public class TimeTriggerReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
         // יוצרים חיבור לבסיס הנתונים שלנו בענן (Firestore)
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // מבצעים שאילתה: "תביא לי את כל המסמכים באוסף 'workers' שבהם השדה 'isEntered' שווה ל-true"
-        // שימוש ב-whereEqualTo חוסך לנו הורדת מידע מיותר וחוסך זמן סוללה
-        db.collection("workers")
-                .whereEqualTo("isEntered", true)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    // ברגע שהשרת מחזיר תשובה בהצלחה, אנחנו בודקים כמה עובדים נמצאו ברשימה
-                    int count = queryDocumentSnapshots.size();
+        // כאן אנחנו שולפים את המספר שהדבקנו ב-Intent
+        String factoryNumber = intent.getStringExtra("factoryNumber");
 
-                    // קוראים לפונקציה שמציגה את ההתראה למשתמש
-                    showNotification(context, count);
-                });
+        if (factoryNumber != null) {
+            // מבצעים שאילתה: "תביא לי את כל המסמכים באוסף 'workers' שבהם השדה 'isEntered' שווה ל-true"
+            // שימוש ב-whereEqualTo חוסך לנו הורדת מידע מיותר וחוסך זמן סוללה
+            // סיננו גם לפי factoryNumber כדי לקבל רק את העובדים של המנהל הנוכחי
+            db.collection("workers")
+                    .whereEqualTo("factoryNumber", factoryNumber)
+                    .whereEqualTo("isEntered", true)
+                    .whereEqualTo("entryDate", today)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        // ברגע שהשרת מחזיר תשובה בהצלחה, אנחנו בודקים כמה עובדים נמצאו ברשימה
+                        int count = queryDocumentSnapshots.size();
+
+                        // קוראים לפונקציה שמציגה את ההתראה למשתמש
+                        showNotification(context, count);
+                    });
+        }
     }
 
     // פונקציית עזר לבניית ושליחת התראה למכשיר

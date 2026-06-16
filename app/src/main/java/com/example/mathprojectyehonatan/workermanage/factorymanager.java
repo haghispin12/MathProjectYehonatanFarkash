@@ -30,6 +30,7 @@ public class factorymanager extends AppCompatActivity {
     private RecyclerView rcShowWorker;
     private EditText etSearch;
     private MyWorkerAdapter myWorkerAdapter;
+    private String myFactoryNumber; // משתנה לשמירת מספר המפעל
 
     // רשימה ששומרת את העובדים שנמצא כרגע במסך
     ArrayList<worker> workers = new ArrayList<>();
@@ -38,11 +39,15 @@ public class factorymanager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factorymanager);
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 101);
+        }
         // שלב 1: חיבור הכפתורים והעיצוב לקוד
         initviews();
 
         // שלב 2: זיהוי אוטומטי של המנהל המחובר ושליפת העובדים שלו
         fetchManagerFactoryNumber();
+
     }
 
     /**
@@ -104,12 +109,14 @@ public class factorymanager extends AppCompatActivity {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
 
+
                         // חילוץ מספר המפעל של המנהל (השדה שנקרא "factory number")
                         String factoryNumber = document.getString("factoryNumber");
 
                         // אם אכן יש מספר מפעל, נעבור לשלב הבא ונשלח את המספר הזה לפעולת שליפת העובדים
                         if (factoryNumber != null) {
                             DataRetrievalFirestore(factoryNumber);
+                            scheduleDailyAlarms(factoryNumber);
                         } else {
                             Toast.makeText(this, "לא הוגדר מספר מפעל למנהל זה.", Toast.LENGTH_SHORT).show();
                         }
@@ -254,13 +261,13 @@ public class factorymanager extends AppCompatActivity {
         }
     }
 
-    private void scheduleDailyAlarms() {
-        // 1. גישה לשירות השעונים של אנדרואיד (AlarmManager).
+    private void scheduleDailyAlarms(String factoryNumber) {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
         // 2. יצירת Intent - זהו "ההסכם" שאומר איזה קוד להריץ כשיגיע הזמן.
         Intent intent = new Intent(this, TimeTriggerReceiver.class);
 
+        // כאן אנחנו "מדביקים" את מספר המפעל לתוך ה-Intent
+        intent.putExtra("factoryNumber", factoryNumber);
         // 3. הגדרת שתי שעות (10 ו-18) באמצעות פונקציית עזר.
         setOneAlarm(alarmManager, intent, 10, 0, 10);
         setOneAlarm(alarmManager, intent, 18, 0, 18);
@@ -289,4 +296,6 @@ public class factorymanager extends AppCompatActivity {
             am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
     }
+    // --- זה חייב להיות בסוף הקלאס, לפני הסוגר האחרון שלו ---
+
 }

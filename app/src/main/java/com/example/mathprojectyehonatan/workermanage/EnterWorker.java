@@ -335,6 +335,7 @@ public class EnterWorker extends AppCompatActivity {
         if (currentWorkerLastEntryDate == null || !currentWorkerLastEntryDate.equals(todayDate)) {
             updates.put("entryTime", currentTime);   // רושמים שעה רק אם זה ביקור ראשון היום
             updates.put("lastEntryDate", todayDate); // מעדכנים את תאריך הרישום להיום
+            updates.put("entryDate", todayDate); // זה השדה שה-Receiver יחפש
             Toast.makeText(this, "כניסה ראשונה להיום נרשמה בשעה: " + currentTime, Toast.LENGTH_SHORT).show();
         } else {
             // אם התאריכים זהים - לא מוסיפים את entryTime למפה והשעה המקורית לא נדרסת
