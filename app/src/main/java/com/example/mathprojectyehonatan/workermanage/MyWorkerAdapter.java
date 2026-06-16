@@ -48,7 +48,6 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
 
         private TextView TvFullName;
         private TextView TvId;
-        private ImageView IvWorkerImg;
         private TextView TvStatus;
         private TextView TvEntryTime;
         private TextView TvExitTime;
@@ -64,6 +63,11 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
             TvFactoryNumber = itemView.findViewById(R.id.tvFactoryNumber);
         }
 
+        /**
+         *
+         * @param item
+         * @param listener
+         */
         public void bind(final worker item, final InterOnWorkerClickListener listener) {
             TvFullName.setText(item.getFirstName() + " " + item.getLastName());
             TvId.setText(item.getId());

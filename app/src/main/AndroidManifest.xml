@@ -9,6 +9,7 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -22,9 +23,7 @@
         <activity
             android:name=".workermanage.areaManager"
             android:exported="false" />
-        <!-- <activity -->
-        <!-- android:name=".workermanage.workerdetails" -->
-        <!-- android:exported="false" /> -->
+        <receiver android:name=".workermanage.TimeTriggerReceiver" />
         <activity
             android:name=".workermanage.EnterWorker"
             android:exported="false" />

@@ -1,6 +1,7 @@
 package com.example.mathprojectyehonatan.workermanage;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +49,8 @@ public class MainActivityLogin extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                prefs.edit().putBoolean("isManager", false).apply();
                 String email = etEmail.getText().toString().trim();
                 String pass = etPass.getText().toString().trim();
 
@@ -89,6 +92,9 @@ public class MainActivityLogin extends AppCompatActivity {
             Toast.makeText(MainActivityLogin.this, "התחברות מנהל הצליחה", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(MainActivityLogin.this, factorymanager.class);
             startActivity(intent);
+            // אחרי שווידאת ב-Firebase שהמשתמש הוא אכן מנהל:
+            SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            prefs.edit().putBoolean("isManager", true).apply();
         }
         // מאבטח
         else if (email.charAt(0) == 'm' && email.length() == 16) {

@@ -1,5 +1,10 @@
 package com.example.mathprojectyehonatan.workermanage;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +38,6 @@ public class factorymanager extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factorymanager);
-
         // שלב 1: חיבור הכפתורים והעיצוב לקוד
         initviews();
 
@@ -220,6 +224,42 @@ public class factorymanager extends AppCompatActivity {
         // מעדכנים את האדפטר להציג רק את התוצאות המסוננות
         if (myWorkerAdapter != null) {
             myWorkerAdapter.filterList(filteredList);
+        }
+    }
+
+    private void scheduleDailyAlarms() {
+        // 1. גישה לשירות השעונים של אנדרואיד (AlarmManager).
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        // 2. יצירת Intent - זהו "ההסכם" שאומר איזה קוד להריץ כשיגיע הזמן.
+        Intent intent = new Intent(this, TimeTriggerReceiver.class);
+
+        // 3. הגדרת שתי שעות (10 ו-18) באמצעות פונקציית עזר.
+        setOneAlarm(alarmManager, intent, 10, 0, 10);
+        setOneAlarm(alarmManager, intent, 18, 0, 18);
+    }
+
+    private void setOneAlarm(AlarmManager am, Intent intent, int hour, int minute, int requestCode) {
+        // PendingIntent הוא "שלט רחוק". אנחנו לא מפעילים את הקוד עכשיו,
+        // אלא מוסרים את השלט למערכת ההפעלה שתפעיל אותו מאוחר יותר.
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // הגדרת הזמן בלוח השנה.
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        // אם השעה עברה, נוסיף יום כדי שההתראה תכוון ליום הבא.
+        if (calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        // setRepeating: הפקודה שגורמת להתראה לחזור כל יום.
+        // RTC_WAKEUP: "תעיר את המכשיר אם הוא במצב שינה" (קריטי לדיוק).
+        if (am != null) {
+            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
     }
 }
