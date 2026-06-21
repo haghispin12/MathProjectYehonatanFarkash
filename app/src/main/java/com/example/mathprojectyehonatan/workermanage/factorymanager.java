@@ -304,7 +304,7 @@ public class factorymanager extends AppCompatActivity {
             intent.putExtra("factoryNumber", factoryNumber);
             // 3. הגדרת שתי שעות (10 ו-18) באמצעות פונקציית עזר.
             setOneAlarm(alarmManager, intent, 10, 0, 10);
-            setOneAlarm(alarmManager, intent, 22, 49, 18);
+            setOneAlarm(alarmManager, intent, 18, 0, 18);
         }
 
         private void setOneAlarm (AlarmManager am, Intent intent,int hour, int minute,
