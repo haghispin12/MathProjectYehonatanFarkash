@@ -49,7 +49,7 @@ public class MainActivityLogin extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE); //שומר את הידיעה האם המשתמש שמחובר כרגע מנהל או לא בשביל ההרשאות שלוו
                 prefs.edit().putBoolean("isManager", false).apply();
                 String email = etEmail.getText().toString().trim();
                 String pass = etPass.getText().toString().trim();

@@ -143,7 +143,6 @@ public class EnterWorker extends AppCompatActivity {
             public void onClick(View v) {
                 // בתוך ה-onClick של כפתור היציאה שלך:
                 if (currentWorkerDocId != null) {
-                    // קריאה לפונקציית רישום היציאה ששמנו בשלב 2
                     registerWorkerExit(currentWorkerDocId, currentWorkerName);
                 } else {
                     Toast.makeText(EnterWorker.this, "אנא סרוק תעודת זהות תחילה!", Toast.LENGTH_SHORT).show();
@@ -371,6 +370,8 @@ public class EnterWorker extends AppCompatActivity {
         java.util.Map<String, Object> updates = new java.util.HashMap<>();
         updates.put("isEntered", false); // עדכון הסטטוס: העובד יצא (יהפוך לאדום אצל המנהל)
         updates.put("exitTime", currentTime); // רישום שעת היציאה העדכנית
+        updates.put("entryDate", null); // מוחקים את התאריך בזמן היציאה
+
 
         // עדכון המסמך הספציפי של העובד ב-Firestore
         db.collection("workers").document(docId).update(updates)

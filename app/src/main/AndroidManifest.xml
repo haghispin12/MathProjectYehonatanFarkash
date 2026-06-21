@@ -10,7 +10,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -26,7 +26,9 @@
         <activity
             android:name=".workermanage.areaManager"
             android:exported="false" />
-        <receiver android:name=".workermanage.TimeTriggerReceiver" />
+        <receiver
+            android:name=".workermanage.TimeTriggerReceiver"
+            android:exported="true" />
         <activity
             android:name=".workermanage.EnterWorker"
             android:exported="false" />

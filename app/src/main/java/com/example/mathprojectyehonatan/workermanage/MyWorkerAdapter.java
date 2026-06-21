@@ -23,7 +23,12 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
         this.workers = workers;
         this.listener = listener;
     }
-
+    /**
+     * פעולה זו אחראית "לייצר" את העיצוב החזותי של עובד בודד בתוך הרשימה.
+     * היא לוקחת את העיצוב המוגדר בקובץ ה-XML (itemworker),
+     * הופכת אותו לאובייקט שאפשר להציג על המסך,
+     * ועוטפת אותו בתוך ה"תבנית" (ViewHolder) שמנהלת את הנתונים שלו.
+     */
     @NonNull
     @Override
     public MyWorkerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -63,11 +68,6 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
             TvFactoryNumber = itemView.findViewById(R.id.tvFactoryNumber);
         }
 
-        /**
-         *
-         * @param item
-         * @param listener
-         */
         public void bind(final worker item, final InterOnWorkerClickListener listener) {
             TvFullName.setText(item.getFirstName() + " " + item.getLastName());
             TvId.setText(item.getId());
@@ -95,6 +95,11 @@ public class MyWorkerAdapter extends RecyclerView.Adapter<MyWorkerAdapter.MyView
                 TvStatus.setText("סטטוס: מחוץ למפעל");
                 TvStatus.setTextColor(android.graphics.Color.RED);
             }
+            /**
+             * מאזין ללחיצות של המשתמש על פריט ברשימה.
+             * ברגע שהמשתמש לוחץ על עובד, הפעולה מפעילה את הממשק (listener)
+             * ומעבירה את פרטי העובד שנבחר אל הפעילות (Activity) הראשית לטיפול נוסף.
+             */
 
             itemView.setOnClickListener(new android.view.View.OnClickListener() {
                 @Override

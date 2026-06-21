@@ -56,26 +56,25 @@ popAllworkersFromFiresroe();
         allWorkersAdapter = new MyWorkerAdapter(workersList, new InterOnWorkerClickListener() {
             @Override
             public void OnWorkerClick(worker clickedWorker) {
-                // פעולה בעת לחיצה (אפשר להשאיר ריק כרגע)
             }
         });
         // מחברים את האדפטר ל-RecyclerView
         allWorkersRecyclerView.setAdapter(allWorkersAdapter);
         etSearchW.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { //משמש את התיבת חיפוש
                 // פעולה זו מתבצעת שבריר שנייה *לפני* שהטקסט משתנה בפועל.
                 // משתמשים בה בעיקר כאשר רוצים לשמור או לבדוק מה היה הטקסט המקורי רגע לפני ההקלדה או המחיקה
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) { //משמש את התיבת חיפוש
                 // פעולה זו מתבצעת *בזמן* שהטקסט מתחלף (כל תו שנוסף או נמחק).
                 // שימושי למקרים שבהם רוצים להציג חיווי או לבצע בדיקות בזמן אמת תוך כדי תנועה.
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) { // משמש את התיבת חיפוש
                 filterWorkers(s.toString());
                 // פעולה זו מתבצעת מיד *אחרי* שההקלדה או המחיקה הסתיימו והטקסט החדש מוצג על המסך.
                 // זהו השלב הבטוח והמומלץ ביותר לקחת את הטקסט המלא שהוקלד ולשלוח אותו לפונקציית הסינון.

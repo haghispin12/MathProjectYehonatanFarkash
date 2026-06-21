@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,13 +31,15 @@ public class factorymanager extends AppCompatActivity {
     private RecyclerView rcShowWorker;
     private EditText etSearch;
     private MyWorkerAdapter myWorkerAdapter;
-    private String myFactoryNumber; // משתנה לשמירת מספר המפעל
+    private String myFactoryNumber;
+    private TextView tvdate;
 
     // רשימה ששומרת את העובדים שנמצא כרגע במסך
     ArrayList<worker> workers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factorymanager);
         if (android.os.Build.VERSION.SDK_INT >= 33) {
@@ -44,7 +47,7 @@ public class factorymanager extends AppCompatActivity {
         }
         // שלב 1: חיבור הכפתורים והעיצוב לקוד
         initviews();
-
+        displayCurrentDate();
         // שלב 2: זיהוי אוטומטי של המנהל המחובר ושליפת העובדים שלו
         fetchManagerFactoryNumber();
 
@@ -58,13 +61,19 @@ public class factorymanager extends AppCompatActivity {
     private void initviews() {
         btnAddWorker = findViewById(R.id.addWorker);
         rcShowWorker = findViewById(R.id.recycle);
+        tvdate = findViewById(R.id.date);
 // חיבור ההתנתקות לכפתור הוספת העובד (מכיוון שזה הכפתור שיש לך פה)
         setupLogoutGesture(btnAddWorker);
         // לחיצה על כפתור הוספת עובד - פותחת את ה-Fragment המתאים
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // 1. יוצרים את ה"הודעה" (Intent) שתשלח ל-Receiver
+                Intent intent = new Intent(factorymanager.this, TimeTriggerReceiver.class);
+// 2. מוסיפים את מספר המפעל (כדי שה-Receiver ידע איזה נתונים לבדוק)
+                intent.putExtra("factoryNumber", myFactoryNumber);
+// 3. משגרים את ההודעה
+                sendBroadcast(intent);
                 AddWorker fragment = new AddWorker();
                 getSupportFragmentManager().beginTransaction().replace(R.id.FrAddWorker, fragment, "anyTagName").addToBackStack(null).commit();
 
@@ -76,10 +85,12 @@ public class factorymanager extends AppCompatActivity {
         // מאזין לתיבת החיפוש - מסנן את הרשימה בכל פעם שהמנהל מקליד אות
         etSearch.addTextChangedListener(new android.text.TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(android.text.Editable s) {
@@ -152,7 +163,7 @@ public class factorymanager extends AppCompatActivity {
                     // אם חזרו נתונים מהענן
                     if (queryDocumentSnapshots != null) {
 
-                        // --- התחלת קוד האיפוס היומי (שומר על ההערות שלך בהמשך) ---
+                        //קוד האיפוס היומי
                         String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
                         android.content.SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
                         String lastResetDate = prefs.getString("last_reset_date", "");
@@ -199,139 +210,179 @@ public class factorymanager extends AppCompatActivity {
                     }
                 });
     }
+
     // פונקציית עזר לאיפוס יומי
+    /**
+     * פונקציה המבצעת איפוס נתונים גורף לכל העובדים שאינם שייכים לתאריך הנוכחי.
+     */
     private void performDailyReset(QuerySnapshot querySnapshot) {
+        // יוצרים "חבילה" של עדכונים כדי לעדכן את כל העובדים בבת אחת (חסכוני ויעיל)
         com.google.firebase.firestore.WriteBatch batch = FirebaseFirestore.getInstance().batch();
 
+        // מקבלים את תאריך היום בפורמט מספרי כדי להשוות מול הנתונים בענן
+        String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
+
         for (DocumentSnapshot doc : querySnapshot) {
-            // מאפסים את שעת היציאה ל-00:00 במידה ויש ערך
-            if (doc.getString("exitTime") != null) {
-                batch.update(doc.getReference(), "exitTime", "טרם יצא");
+            String entryDate = doc.getString("entryDate");
+
+            // בודקים: אם יש לעובד תאריך כניסה שקיים במערכת, אבל הוא לא שווה לתאריך של היום - מאפסים אותו
+            if (entryDate != null && !entryDate.equals(today)) {
+                batch.update(doc.getReference(), "isEntered", false);        // הפיכת הסטטוס ל"בחוץ"
+                batch.update(doc.getReference(), "entryTime", "טרם נכנס");    // איפוס שעת כניסה
+                batch.update(doc.getReference(), "exitTime", "טרם יצא");      // איפוס שעת יציאה
+                batch.update(doc.getReference(), "entryDate", null);         // מחיקת התאריך הישן כדי לאפשר רישום חדש
             }
         }
-
-        batch.commit().addOnSuccessListener(aVoid ->
-                android.util.Log.d("Reset", "הנתונים אופסו ליום חדש!")
-        );
+        // מבצעים את כל השינויים שנצברו בחבילה בבת אחת מול השרת
+        batch.commit();
     }
 
-    /**
-     * פעולה שמחברת את הרשימה (RecyclerView) אל האדפטר שיצרנו (MyWorkerAdapter).
-     * בנוסף, מגדירה מה קורה כשלוחצים על עובד ברשימה (כרגע מציגה הודעה קצרה עם השם שלו).
-     */
-    public void connectionAdapter() {
-        myWorkerAdapter = new MyWorkerAdapter(workers, item ->
-                Toast.makeText(factorymanager.this, item.getFirstName() + " " + item.getLastName(), Toast.LENGTH_SHORT).show()
-        );
-        rcShowWorker.setLayoutManager(new LinearLayoutManager(this));
-        rcShowWorker.setAdapter(myWorkerAdapter);
-        rcShowWorker.setHasFixedSize(true);
-    }
+        /**
+         * פעולה שמחברת את הרשימה (RecyclerView) אל האדפטר שיצרנו (MyWorkerAdapter).
+         * בנוסף, מגדירה מה קורה כשלוחצים על עובד ברשימה (כרגע מציגה הודעה קצרה עם השם שלו).
+         */
+        public void connectionAdapter () {
+            myWorkerAdapter = new MyWorkerAdapter(workers, item ->
+                    Toast.makeText(factorymanager.this, item.getFirstName() + " " + item.getLastName(), Toast.LENGTH_SHORT).show()
+            );
+            rcShowWorker.setLayoutManager(new LinearLayoutManager(this));
+            rcShowWorker.setAdapter(myWorkerAdapter);
+            rcShowWorker.setHasFixedSize(true);
+        }
 
-    /**
-     * פעולה לסינון הרשימה לפי מה שהמנהל מקליד בתיבת החיפוש.
-     * בודקת האם הטקסט שהוקלד תואם לשם פרטי, שם משפחה או תעודת זהות של העובד.
-     * * @param text הטקסט שהמנהל הקליד בתיבת החיפוש.
-     */
-    private void filter(String text) {
-        ArrayList<worker> filteredList = new ArrayList<>();
+        /**
+         * פעולה לסינון הרשימה לפי מה שהמנהל מקליד בתיבת החיפוש.
+         * בודקת האם הטקסט שהוקלד תואם לשם פרטי, שם משפחה או תעודת זהות של העובד.
+         * * @param text הטקסט שהמנהל הקליד בתיבת החיפוש.
+         */
+        private void filter (String text){
+            ArrayList<worker> filteredList = new ArrayList<>();
 
-        // אם תיבת החיפוש ריקה, נציג את כל העובדים השייכים למפעל
-        if (text == null || text.trim().isEmpty()) {
+            // אם תיבת החיפוש ריקה, נציג את כל העובדים השייכים למפעל
+            if (text == null || text.trim().isEmpty()) {
+                if (myWorkerAdapter != null) {
+                    myWorkerAdapter.filterList(workers);
+                }
+                return;
+            }
+
+            String searchText = text.trim();
+
+            // עוברים על כל העובדים ברשימה ובודקים התאמה
+            for (worker item : workers) {
+                String firstName = item.getFirstName() != null ? item.getFirstName().trim() : "";
+                String lastName = item.getLastName() != null ? item.getLastName().trim() : "";
+                String idNumber = item.getId() != null ? item.getId().trim() : "";
+
+                // אם הטקסט נמצא באחד מהשדות, נוסיף אותו לרשימה המסוננת
+                if (firstName.contains(searchText) || lastName.contains(searchText) || idNumber.contains(searchText)) {
+                    filteredList.add(item);
+                }
+            }
+
+            // מעדכנים את האדפטר להציג רק את התוצאות המסוננות
             if (myWorkerAdapter != null) {
-                myWorkerAdapter.filterList(workers);
-            }
-            return;
-        }
-
-        String searchText = text.trim();
-
-        // עוברים על כל העובדים ברשימה ובודקים התאמה
-        for (worker item : workers) {
-            String firstName = item.getFirstName() != null ? item.getFirstName().trim() : "";
-            String lastName = item.getLastName() != null ? item.getLastName().trim() : "";
-            String idNumber = item.getId() != null ? item.getId().trim() : "";
-
-            // אם הטקסט נמצא באחד מהשדות, נוסיף אותו לרשימה המסוננת
-            if (firstName.contains(searchText) || lastName.contains(searchText) || idNumber.contains(searchText)) {
-                filteredList.add(item);
+                myWorkerAdapter.filterList(filteredList);
             }
         }
 
-        // מעדכנים את האדפטר להציג רק את התוצאות המסוננות
-        if (myWorkerAdapter != null) {
-            myWorkerAdapter.filterList(filteredList);
-        }
-    }
+        private void scheduleDailyAlarms (String factoryNumber){
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            // בדיקה לאנדרואיד 12 ומעלה: האם יש לנו הרשאה לתזמן אזעקות מדויקות?
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                if (!alarmManager.canScheduleExactAlarms()) {
+                    // אם אין הרשאה, נשלח את המשתמש להגדרות
+                    Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                    startActivity(intent);
+                    return; // נעצור כאן עד שהמשתמש יאשר
+                }
+            }
+            // 2. יצירת Intent - זהו "ההסכם" שאומר איזה קוד להריץ כשיגיע הזמן.
+            Intent intent = new Intent(this, TimeTriggerReceiver.class);
 
-    private void scheduleDailyAlarms(String factoryNumber) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        // 2. יצירת Intent - זהו "ההסכם" שאומר איזה קוד להריץ כשיגיע הזמן.
-        Intent intent = new Intent(this, TimeTriggerReceiver.class);
-
-        // כאן אנחנו "מדביקים" את מספר המפעל לתוך ה-Intent
-        intent.putExtra("factoryNumber", factoryNumber);
-        // 3. הגדרת שתי שעות (10 ו-18) באמצעות פונקציית עזר.
-        setOneAlarm(alarmManager, intent, 10, 0, 10);
-        setOneAlarm(alarmManager, intent, 18, 0, 18);
-    }
-
-    private void setOneAlarm(AlarmManager am, Intent intent, int hour, int minute, int requestCode) {
-        // PendingIntent הוא "שלט רחוק". אנחנו לא מפעילים את הקוד עכשיו,
-        // אלא מוסרים את השלט למערכת ההפעלה שתפעיל אותו מאוחר יותר.
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this, requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // הגדרת הזמן בלוח השנה.
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hour);
-        calendar.set(Calendar.MINUTE, minute);
-        calendar.set(Calendar.SECOND, 0);
-
-        // אם השעה עברה, נוסיף יום כדי שההתראה תכוון ליום הבא.
-        if (calendar.before(Calendar.getInstance())) {
-            calendar.add(Calendar.DATE, 1);
+            // כאן אנחנו "מדביקים" את מספר המפעל לתוך ה-Intent
+            intent.putExtra("factoryNumber", factoryNumber);
+            // 3. הגדרת שתי שעות (10 ו-18) באמצעות פונקציית עזר.
+            setOneAlarm(alarmManager, intent, 10, 0, 10);
+            setOneAlarm(alarmManager, intent, 22, 49, 18);
         }
 
-        // setRepeating: הפקודה שגורמת להתראה לחזור כל יום.
-        // RTC_WAKEUP: "תעיר את המכשיר אם הוא במצב שינה" (קריטי לדיוק).
-        if (am != null) {
-            am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        }
+        private void setOneAlarm (AlarmManager am, Intent intent,int hour, int minute,
+        int requestCode){
+            // PendingIntent הוא "שלט רחוק". אנחנו לא מפעילים את הקוד עכשיו,
+            // אלא מוסרים את השלט למערכת ההפעלה שתפעיל אותו מאוחר יותר.
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    this, requestCode, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
 
-    }
+            // הגדרת הזמן בלוח השנה.
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 0);
+
+            // אם השעה עברה, נוסיף יום כדי שההתראה תכוון ליום הבא.
+            if (calendar.before(Calendar.getInstance())) {
+                calendar.add(Calendar.DATE, 1);
+            }
+
+            // setRepeating: הפקודה שגורמת להתראה לחזור כל יום.
+            // RTC_WAKEUP: "תעיר את המכשיר אם הוא במצב שינה" (קריטי לדיוק).
+            if (am != null) {
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);            }
+
+        }
+        /**
+         * פונקציית עזר להוספת "דלת אחורית" להתנתקות בלחיצה ארוכה.
+         * הלחיצה הארוכה מבטיחה שהמשתמש לא יתנתק בטעות מפעולה רגילה בכפתור.
+         *
+         * @param view הרכיב (כפתור/אייקון) שעל גביו נפעיל את מנגנון ההתנתקות.
+         */
+        private void setupLogoutGesture (View view){
+            // הגדרת מאזין ללחיצה ארוכה (Long Click) על הכפתור
+            view.setOnLongClickListener(v -> {
+
+                // 1. התנתקות מפיירבייס: מחיקת פרטי המשתמש הנוכחי מהזיכרון של המכשיר ומהחיבור לשרת
+                FirebaseAuth.getInstance().signOut();
+
+                // 2. יצירת Intent למעבר למסך ההתחברות (MainActivityLogin)
+                Intent intent = new Intent(factorymanager.this, MainActivityLogin.class);
+
+                // 3. הגדרת דגלים (Flags) למניעת חזרה לאחור:
+                // FLAG_ACTIVITY_NEW_TASK: פותח את מסך ההתחברות כמשימה חדשה.
+                // FLAG_ACTIVITY_CLEAR_TASK: מוחק את כל המסכים הקודמים (סטק הפעילויות) מהזיכרון.
+                // זה קריטי כדי שבלחיצה על "חזור" בטלפון, המשתמש לא יחזור למסך הניהול.
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                // 4. הפעלת מסך ההתחברות וסגירת המסך הנוכחי (finish) מהזיכרון
+                startActivity(intent);
+                finish();
+
+                // 5. חיווי ויזואלי למשתמש שהפעולה הצליחה
+                Toast.makeText(factorymanager.this, "התנתקת בהצלחה!", Toast.LENGTH_SHORT).show();
+
+                // 6. מחזירים true כדי לציין למערכת שהלחיצה הארוכה טופלה במלואה,
+                // ובכך אנחנו מונעים הפעלה של לחיצה רגילה (OnClick) במקביל.
+                return true;
+            });
+        }
     /**
-     * פונקציית עזר להוספת "דלת אחורית" להתנתקות בלחיצה ארוכה.
-     * הלחיצה הארוכה מבטיחה שהמשתמש לא יתנתק בטעות מפעולה רגילה בכפתור.
-     *
-     * @param view הרכיב (כפתור/אייקון) שעל גביו נפעיל את מנגנון ההתנתקות.
+     * פונקציה זו אחראית על שליפת התאריך הנוכחי מהמערכת,
+     * עיצובו בפורמט קריא, והצגתו בתוך רכיב ה-TextView במסך.
      */
-    private void setupLogoutGesture(View view) {
-        // הגדרת מאזין ללחיצה ארוכה (Long Click) על הכפתור
-        view.setOnLongClickListener(v -> {
+    private void displayCurrentDate() {
+        // 1. יצירת אובייקט לפורמט תאריך (SimpleDateFormat)
+        // אנחנו מגדירים לו את התבנית "יום/חודש/שנה" (dd/MM/yyyy)
+        // ומשתמשים ב-Locale.getDefault() כדי שהפורמט יתאים להגדרות השפה של הטלפון
+        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
 
-            // 1. התנתקות מפיירבייס: מחיקת פרטי המשתמש הנוכחי מהזיכרון של המכשיר ומהחיבור לשרת
-            FirebaseAuth.getInstance().signOut();
+        // 2. יצירת אובייקט Date שמייצג את הרגע הנוכחי ("עכשיו")
+        java.util.Date now = new java.util.Date();
 
-            // 2. יצירת Intent למעבר למסך ההתחברות (MainActivityLogin)
-            Intent intent = new Intent(factorymanager.this, MainActivityLogin.class);
+        // 3. המרת התאריך למחרוזת (String) לפי הפורמט שהגדרנו למעלה
+        String currentDate = dateFormat.format(now);
 
-            // 3. הגדרת דגלים (Flags) למניעת חזרה לאחור:
-            // FLAG_ACTIVITY_NEW_TASK: פותח את מסך ההתחברות כמשימה חדשה.
-            // FLAG_ACTIVITY_CLEAR_TASK: מוחק את כל המסכים הקודמים (סטק הפעילויות) מהזיכרון.
-            // זה קריטי כדי שבלחיצה על "חזור" בטלפון, המשתמש לא יחזור למסך הניהול.
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-            // 4. הפעלת מסך ההתחברות וסגירת המסך הנוכחי (finish) מהזיכרון
-            startActivity(intent);
-            finish();
-
-            // 5. חיווי ויזואלי למשתמש שהפעולה הצליחה
-            Toast.makeText(factorymanager.this, "התנתקת בהצלחה!", Toast.LENGTH_SHORT).show();
-
-            // 6. מחזירים true כדי לציין למערכת שהלחיצה הארוכה טופלה במלואה,
-            // ובכך אנחנו מונעים הפעלה של לחיצה רגילה (OnClick) במקביל.
-            return true;
-        });
+        // 4. עדכון רכיב ה-TextView במסך עם הטקסט המעוצב
+        // אנחנו מוסיפים את המילה "תאריך: " לפני הערך שקיבלנו
+        tvdate.setText("תאריך: " + currentDate);
     }
-}
+    }

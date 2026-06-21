@@ -27,7 +27,14 @@
         android:inputType="text"
         android:layout_marginBottom="10dp"
         android:padding="10dp"/>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/date"
+    android:text="התאריך"
+    android:textSize="15dp">
 
+</TextView>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

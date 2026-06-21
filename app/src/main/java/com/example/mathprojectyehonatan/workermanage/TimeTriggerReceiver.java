@@ -1,5 +1,6 @@
 package com.example.mathprojectyehonatan.workermanage;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,10 +23,10 @@ public class TimeTriggerReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("DEBUG_LOG", "ה-Receiver הופעל!"); // שורה חדשה לבדיקה
         String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
         // יוצרים חיבור לבסיס הנתונים שלנו בענן (Firestore)
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         // כאן אנחנו שולפים את המספר שהדבקנו ב-Intent
         String factoryNumber = intent.getStringExtra("factoryNumber");
 
@@ -44,7 +45,44 @@ public class TimeTriggerReceiver extends BroadcastReceiver {
 
                         // קוראים לפונקציה שמציגה את ההתראה למשתמש
                         showNotification(context, count);
+                        scheduleNextAlarm(context, factoryNumber, 10, 10);
+                        scheduleNextAlarm(context, factoryNumber, 21, 18);
                     });
+
+        }
+    }
+    private void scheduleNextAlarm(Context context, String factoryNumber, int hour, int requestCode) {
+        // קבלת גישה לשירות ה-AlarmManager של מערכת האנדרואיד
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // יצירת Intent שמצביע על ה-Receiver הנוכחי שלנו כדי שיופעל שוב
+        Intent i = new Intent(context, TimeTriggerReceiver.class);
+
+        // העברת מספר המפעל כ"מטען" (Extra) כדי שה-Receiver ידע איזה נתונים לשלוף מחר
+        i.putExtra("factoryNumber", factoryNumber);
+
+        // יצירת PendingIntent ("שלט רחוק") שמאפשר למערכת להפעיל את הקוד שלנו מאוחר יותר בשמנו
+        // משתמשים ב-FLAG_UPDATE_CURRENT כדי לעדכן את המידע אם הוא השתנה
+        PendingIntent pi = PendingIntent.getBroadcast(context, requestCode, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // קבלת מופע של לוח השנה הנוכחי כדי לחשב את זמן ההפעלה הבא
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+
+        // הגדרת התאריך ליום הבא (כדי שההתראה תהיה תקפה ליום שאחרי)
+        cal.add(java.util.Calendar.DATE, 1);
+
+        // הגדרת השעה המבוקשת (לפי הפרמטר שהעברנו לפונקציה)
+        cal.set(java.util.Calendar.HOUR_OF_DAY, hour);
+
+        // איפוס הדקות והשניות ל-0 כדי שההתראה תהיה מדויקת בתחילת השעה
+        cal.set(java.util.Calendar.MINUTE, 0);
+        cal.set(java.util.Calendar.SECOND, 0);
+
+        // בדיקה שה-AlarmManager זמין ולא ריק
+        if (am != null) {
+            // קביעת התראה מדויקת שפועלת גם אם המכשיר במצב שינה (Doze Mode)
+            // זה מבטיח שההתראה תמיד תגיע בזמן
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
         }
     }
 
@@ -54,7 +92,7 @@ public class TimeTriggerReceiver extends BroadcastReceiver {
 
         // 1. הגדרת 'מזהה ערוץ' (Channel ID).
         // אנדרואיד מחייבת ערוץ כדי לנהל התראות. זהו "השם" של הערוץ שלנו במערכת.
-        String channelId = "work_report_channel";
+        String channelId = "final_test_channel_2026";
 
         // 2. הגדרת היעד (Intent). אנחנו אומרים למחשב: "כשלוחצים על ההתראה, תפתח את המסך שנקרא factorymanager"
         Intent intent = new Intent(context, factorymanager.class);
@@ -73,14 +111,15 @@ public class TimeTriggerReceiver extends BroadcastReceiver {
                 .setSmallIcon(R.drawable.ic_launcher_foreground) // האייקון שיופיע למעלה בשורת המצב
                 .setContentTitle("דיווח נוכחות")                 // הכותרת של ההודעה
                 .setContentText("כרגע נמצאים במפעל " + count + " עובדים.") // הטקסט שמשתנה
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT) // חשיבות ההתראה
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setAutoCancel(true)                              // סגירת ההתראה אוטומטית אחרי לחיצה
                 .setContentIntent(pendingIntent);                 // החיבור ל'כרטיס הכניסה' שיצרנו בסעיף 3
 
         // 5. יצירת הערוץ (NotificationChannel).
         // זה קטע קוד חובה בכל גרסה של אנדרואיד מ-8 ומעלה. אם לא ניצור אותו, ההתראה לא תופיע.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "דיווחים", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(channelId, "דיווחים", NotificationManager.IMPORTANCE_HIGH);
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
