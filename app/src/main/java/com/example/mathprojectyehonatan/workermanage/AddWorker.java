@@ -37,14 +37,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class AddWorker extends Fragment {
-private worker wrk1;
-private EditText etEnterId;
-private EditText etEnterName;
-private EditText etEnterFactoryNumbr;
-private EditText etEnterLastName;
-private EditText etEnterMail;
-private Button btnAddWorker;
-private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private worker wrk1;
+    private EditText etEnterId;
+    private EditText etEnterName;
+    private EditText etEnterFactoryNumbr;
+    private EditText etEnterLastName;
+    private EditText etEnterMail;
+    private Button btnAddWorker;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,3 +119,4 @@ private FirebaseAuth auth = FirebaseAuth.getInstance();
                     }
                 });
     }
+}
