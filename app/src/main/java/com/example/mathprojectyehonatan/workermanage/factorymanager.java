@@ -160,31 +160,7 @@ public class factorymanager extends AppCompatActivity {
                     // אם חזרו נתונים מהענן
                     // בדיקה שהמידע שהתקבל מ-Firebase (או ממקור הנתונים) אינו ריק כדי למנוע קריסה
                     if (queryDocumentSnapshots != null) {
-
-                        // 1. הכנת תאריך בפורמט "שנה-חודש-יום" (למשל: 20260625).
-                        // פורמט זה מעולה להשוואה טקסטואלית פשוטה.
-                        String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
-
-                        // 2. גישה ל-SharedPreferences - זהו ה"זיכרון לטווח ארוך" של האפליקציה,
-                        // ששומר נתונים גם כשהאפליקציה נסגרת.
-                        android.content.SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
-
-                        // 3. שליפת התאריך שבו בוצע האיפוס האחרון.
-                        // אם לא בוצע מעולם, הערך יהיה מחרוזת ריקה ("").
-                        String lastResetDate = prefs.getString("last_reset_date", "");
-
-                        // 4. לוגיקת האיפוס: אם התאריך של היום שונה מהתאריך האחרון ששמרנו,
-                        // סימן שעבר יום והגיע הזמן לאפס שוב.
-                        if (!today.equals(lastResetDate)) {
-
-                            // מריצים את הפעולה שמאפסת את הנתונים
-                            performDailyReset(queryDocumentSnapshots);
-
-                            // מעדכנים את קובץ ההגדרות לתאריך של היום,
-                            // כך שעד סוף היום התנאי (!today.equals) יחזיר false ולא נריץ את האיפוס שוב.
-                            prefs.edit().putString("last_reset_date", today).apply();
-                        }
-
+                        performDailyReset(queryDocumentSnapshots);
                         workers.clear(); // מנקים רשימה קיימת כדי שלא יהיו כפילויות במסך
 
                         // עוברים אחד-אחד על המסמכים שחזרו מהענן
@@ -220,33 +196,52 @@ public class factorymanager extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 
-    // פונקציית עזר לאיפוס יומי
     /**
-     * פונקציה המבצעת איפוס נתונים גורף לכל העובדים שאינם שייכים לתאריך הנוכחי.
+     * פונקציה זו מבצעת איפוס יומי לנתוני העובדים.
+     * היא עוברת על כל העובדים שחזרו מהשאילתה, ובודקת האם התאריך האחרון שלהם שונה מהיום.
+     * אם כן - היא מאפסת את סטטוס הכניסה והשעות שלהם.
      */
     private void performDailyReset(QuerySnapshot querySnapshot) {
-        // יוצרים "חבילה" של עדכונים כדי לעדכן את כל העובדים בבת אחת (חסכוני ויעיל)
+        // 1. יצירת אובייקט WriteBatch:
+        // פעולה זו מאפשרת לנו לאסוף את כל עדכוני הנתונים ולשלוח אותם לשרת בבת אחת (Atomic Operation).
+        // זה הרבה יותר יעיל ומקצועי מאשר לעדכן כל עובד בנפרד (שיוצר עומס על השרת).
         com.google.firebase.firestore.WriteBatch batch = FirebaseFirestore.getInstance().batch();
 
-        // מקבלים את תאריך היום בפורמט מספרי כדי להשוות מול הנתונים בענן
-        String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
+        // 2. הגדרת התאריך של היום:
+        // אנחנו משתמשים בפורמט 'yyyy-MM-dd' כדי שיתאים בדיוק לפורמט השמור בבסיס הנתונים (Firebase).
+        String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault()).format(new java.util.Date());
 
+        boolean hasUpdates = false;
+
+        // 3. לולאה על כל העובדים שחזרו מהשאילתה:
         for (DocumentSnapshot doc : querySnapshot) {
-            String entryDate = doc.getString("entryDate");
+            Boolean isEnteredVal = doc.getBoolean("isEntered");
+            boolean isEntered = (isEnteredVal != null && isEnteredVal);
+            // שליפת השדה המדויק שבו שמור התאריך האחרון של העובד
+            String lastDate = doc.getString("lastEntryDate");
 
-            // בודקים: אם יש לעובד תאריך כניסה שקיים במערכת, אבל הוא לא שווה לתאריך של היום - מאפסים אותו
-            if (entryDate != null && !entryDate.equals(today)) {
-                batch.update(doc.getReference(), "isEntered", false);        // הפיכת הסטטוס ל"בחוץ"
-                batch.update(doc.getReference(), "entryTime", "טרם נכנס");    // איפוס שעת כניסה
-                batch.update(doc.getReference(), "exitTime", "טרם יצא");      // איפוס שעת יציאה
-                batch.update(doc.getReference(), "entryDate", null);         // מחיקת התאריך הישן כדי לאפשר רישום חדש
+            // 4. לוגיקת הבדיקה (התנאי לאיפוס):
+            if (lastDate == null || !lastDate.equals(today)) {
+                batch.update(doc.getReference(), "isEntered", false);
+                batch.update(doc.getReference(), "entryTime", "טרם נכנס");
+                batch.update(doc.getReference(), "exitTime", "טרם יצא");
+                // מעדכנים את התאריך האחרון להיום כדי לסמן שהעובד טופל ולא צריך לעבור איפוס נוסף היום.
+                batch.update(doc.getReference(), "lastEntryDate", today);
+                // מסמנים שבוצע לפחות שינוי אחד, כדי שנדע לשלוח את העדכון לשרת (חסכון במשאבים).
+                hasUpdates = true;
             }
         }
-        // מבצעים את כל השינויים שנצברו בחבילה בבת אחת מול השרת
-        batch.commit();
+
+        // 5. שליחת כל העדכונים לשרת בבת אחת:
+        // הפקודה הזו מוציאה לפועל את כל העדכונים שאספנו בלולאה.
+        if (hasUpdates) {
+            batch.commit();
+        }
     }
+
 
         /**
          * פעולה שמחברת את הרשימה (RecyclerView) אל האדפטר שיצרנו (MyWorkerAdapter).
