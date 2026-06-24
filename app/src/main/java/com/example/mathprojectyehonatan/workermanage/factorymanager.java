@@ -45,10 +45,11 @@ public class factorymanager extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= 33) {
             requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 101);
         }
-        // שלב 1: חיבור הכפתורים והעיצוב לקוד
+        // חיבור הכפתורים והעיצוב לקוד
         initviews();
+
         displayCurrentDate();
-        // שלב 2: זיהוי אוטומטי של המנהל המחובר ושליפת העובדים שלו
+        //  זיהוי אוטומטי של המנהל המחובר ושליפת העובדים שלו
         fetchManagerFactoryNumber();
 
     }
@@ -68,12 +69,10 @@ public class factorymanager extends AppCompatActivity {
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 1. יוצרים את ה"הודעה" (Intent) שתשלח ל-Receiver
+                // . יוצרים את ה"הודעה" (Intent) שתשלח ל-Receiver
                 Intent intent = new Intent(factorymanager.this, TimeTriggerReceiver.class);
-// 2. מוסיפים את מספר המפעל (כדי שה-Receiver ידע איזה נתונים לבדוק)
+//  מוסיפים את מספר המפעל (כדי שה-Receiver ידע איזה נתונים לבדוק)
                 intent.putExtra("factoryNumber", myFactoryNumber);
-// 3. משגרים את ההודעה
-                sendBroadcast(intent);
                 AddWorker fragment = new AddWorker();
                 getSupportFragmentManager().beginTransaction().replace(R.id.FrAddWorker, fragment, "anyTagName").addToBackStack(null).commit();
 
@@ -100,7 +99,6 @@ public class factorymanager extends AppCompatActivity {
     }
 
     /**
-     * פעולה 1 מתוך 2 לשליפת נתונים:
      * בודקת מיהו המנהל שמחובר כרגע למערכת לפי האימייל שלו,
      * ניגשת לאוסף "factory manager" בענן, ושולפת את מספר המפעל ששייך לו.
      */
@@ -144,7 +142,6 @@ public class factorymanager extends AppCompatActivity {
     }
 
     /**
-     * פעולה 2 מתוך 2 לשליפת נתונים:
      * מקבלת כקלט את מספר המפעל של המנהל, וניגשת לאוסף "workers" בענן.
      * שולפת רק את העובדים שהשדה "factoryNumber" שלהם תואם בדיוק למספר המפעל הזה.
      * * @param factoryNumberForThisManager מספר המפעל של המנהל הנוכחי.
@@ -161,18 +158,32 @@ public class factorymanager extends AppCompatActivity {
                     }
 
                     // אם חזרו נתונים מהענן
+                    // בדיקה שהמידע שהתקבל מ-Firebase (או ממקור הנתונים) אינו ריק כדי למנוע קריסה
                     if (queryDocumentSnapshots != null) {
 
-                        //קוד האיפוס היומי
+                        // 1. הכנת תאריך בפורמט "שנה-חודש-יום" (למשל: 20260625).
+                        // פורמט זה מעולה להשוואה טקסטואלית פשוטה.
                         String today = new java.text.SimpleDateFormat("yyyyMMdd", java.util.Locale.getDefault()).format(new java.util.Date());
+
+                        // 2. גישה ל-SharedPreferences - זהו ה"זיכרון לטווח ארוך" של האפליקציה,
+                        // ששומר נתונים גם כשהאפליקציה נסגרת.
                         android.content.SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+
+                        // 3. שליפת התאריך שבו בוצע האיפוס האחרון.
+                        // אם לא בוצע מעולם, הערך יהיה מחרוזת ריקה ("").
                         String lastResetDate = prefs.getString("last_reset_date", "");
 
+                        // 4. לוגיקת האיפוס: אם התאריך של היום שונה מהתאריך האחרון ששמרנו,
+                        // סימן שעבר יום והגיע הזמן לאפס שוב.
                         if (!today.equals(lastResetDate)) {
+
+                            // מריצים את הפעולה שמאפסת את הנתונים
                             performDailyReset(queryDocumentSnapshots);
+
+                            // מעדכנים את קובץ ההגדרות לתאריך של היום,
+                            // כך שעד סוף היום התנאי (!today.equals) יחזיר false ולא נריץ את האיפוס שוב.
                             prefs.edit().putString("last_reset_date", today).apply();
                         }
-                        // --- סוף קוד האיפוס היומי ---
 
                         workers.clear(); // מנקים רשימה קיימת כדי שלא יהיו כפילויות במסך
 
@@ -306,7 +317,13 @@ public class factorymanager extends AppCompatActivity {
             setOneAlarm(alarmManager, intent, 10, 0, 10);
             setOneAlarm(alarmManager, intent, 18, 0, 18);
         }
-
+    /**
+     * מתזמנת התראה מדויקת בודדת לשעה ספציפית ביום.
+     * הפונקציה מחשבת את זמן ההפעלה הקרוב ביותר; אם השעה המבוקשת כבר עברה היום,
+     * היא תתזמן את ההתראה ליום המחרת.
+     * השימוש ב-setExactAndAllowWhileIdle מבטיח שההתראה תופעל בדיוק בזמן,
+     * גם אם המכשיר נמצא במצב שינה (Doze Mode).
+     */
         private void setOneAlarm (AlarmManager am, Intent intent,int hour, int minute,
         int requestCode){
             // PendingIntent הוא "שלט רחוק". אנחנו לא מפעילים את הקוד עכשיו,
@@ -324,11 +341,15 @@ public class factorymanager extends AppCompatActivity {
             if (calendar.before(Calendar.getInstance())) {
                 calendar.add(Calendar.DATE, 1);
             }
-
-            // setRepeating: הפקודה שגורמת להתראה לחזור כל יום.
             // RTC_WAKEUP: "תעיר את המכשיר אם הוא במצב שינה" (קריטי לדיוק).
             if (am != null) {
-                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);            }
+                try {
+                    am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                } catch (SecurityException e) {
+                    // אם יש שגיאה, האפליקציה תתעלם ממנה במקום לקרוס
+                    e.printStackTrace();
+                }
+            }
 
         }
         /**
@@ -385,4 +406,5 @@ public class factorymanager extends AppCompatActivity {
         // אנחנו מוסיפים את המילה "תאריך: " לפני הערך שקיבלנו
         tvdate.setText("תאריך: " + currentDate);
     }
-    }
+
+}

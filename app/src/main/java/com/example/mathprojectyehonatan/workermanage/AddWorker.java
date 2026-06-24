@@ -43,98 +43,78 @@ private EditText etEnterName;
 private EditText etEnterFactoryNumbr;
 private EditText etEnterLastName;
 private EditText etEnterMail;
-private Button btnAddPictre;
 private Button btnAddWorker;
-private Uri uri;
-private ImageView imgvi;
 private FirebaseAuth auth = FirebaseAuth.getInstance();
-    public ActivityResultLauncher<Intent> startCamera = registerForActivityResult(   // האזנה לסגירת startcamera
-
-            new ActivityResultContracts.StartActivityForResult(),
-
-            new ActivityResultCallback<ActivityResult>() {
-
-                @Override
-
-                public void onActivityResult(ActivityResult result) {
-
-                    if (result.getResultCode() == RESULT_OK) {
-                        imgvi.setImageURI(uri);
-
-                    }
-
-                }
-
-            });
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_worker, container, false); // מה זה
+        // הופך את ה-XML של העיצוב לאובייקט שאפשר לתפעל בקוד
+        View view = inflater.inflate(R.layout.fragment_add_worker, container, false);
+
+        // מחבר את כל האלמנטים של המסך
         initviews(view);
-        return  view;// מה זה
+
+        // מחזיר את התצוגה המוכנה כדי שתוצג על המסך
+        return view;
     }
+
     private void initviews(View view) {
+        // מחבר בין משתני ה-Java ל-IDs של ה-XML
         etEnterId = view.findViewById(R.id.EnterId);
         etEnterName = view.findViewById(R.id.EnterName);
         etEnterLastName = view.findViewById(R.id.EnterLastName);
         etEnterMail = view.findViewById(R.id.EnterMail);
         etEnterFactoryNumbr = view.findViewById(R.id.enterNumFactory);
         btnAddWorker = view.findViewById(R.id.AddWorker);
-;
 
-
-
-
+        // מה קורה כשלוחצים על כפתור ההוספה
         btnAddWorker.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                auth.createUserWithEmailAndPassword(etEnterMail.getText().toString().trim(), etEnterId.getText().toString()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                                        if (task.isSuccessful()) { // אם יש הצלחה בחיבור לאינטרנט ויש חיבור שהצליח עם הfirebase
-                                                            Toast.makeText(getActivity(), "Registration success", Toast.LENGTH_SHORT).show();
-                                                            collection();
-                                                        } else {
-
-                                                              Toast.makeText(getActivity(), "Registration failed",Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-
-                                                });
-
-
-
-                                            }
-                                        });
-
+            @Override
+            public void onClick(View v) {
+                // יוצר משתמש חדש ב-Firebase Authentication
+                auth.createUserWithEmailAndPassword(etEnterMail.getText().toString().trim(), etEnterId.getText().toString()).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // אם ההרשמה הצליחה, עוברים לשמור את הפרטים ב-Firestore
+                            Toast.makeText(getActivity(), "Registration success", Toast.LENGTH_SHORT).show();
+                            collection();
+                        } else {
+                            Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
-public void collection() {
-    Toast.makeText(getActivity(), "Debug Factory: " + etEnterFactoryNumbr.getText().toString(), Toast.LENGTH_SHORT).show();
-    wrk1 = new worker(etEnterName.getText().toString(), etEnterLastName.getText().toString(), etEnterId.getText().toString(), etEnterMail.getText().toString(),etEnterFactoryNumbr.getText().toString() );
 
-    FirebaseFirestore.getInstance().collection("workers")
+    public void collection() {
+        // בודק שהמספר מפעל שנקלט תקין (לוג לצורך דיבאג)
+        Toast.makeText(getActivity(), "Debug Factory: " + etEnterFactoryNumbr.getText().toString(), Toast.LENGTH_SHORT).show();
 
-            .add(wrk1)
-            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                @Override
-                public void onSuccess(DocumentReference documentReference) {
-                    Toast.makeText(getActivity(), "add worker has been success", Toast.LENGTH_SHORT).show();
-                    getActivity().getSupportFragmentManager().beginTransaction().remove(AddWorker.this).commit();
-                    //
-                }
+        // יצירת אובייקט עובד חדש
+        wrk1 = new worker(etEnterName.getText().toString(), etEnterLastName.getText().toString(), etEnterId.getText().toString(), etEnterMail.getText().toString(), etEnterFactoryNumbr.getText().toString());
 
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "add student has been failed", Toast.LENGTH_SHORT).show();
-                }
-            });
-}
-}
+        // שמירה ב-Firestore
+        FirebaseFirestore.getInstance().collection("workers")
+                .add(wrk1)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        // אם הצליח - מנקה את המסך ויוצא
+                        Toast.makeText(getActivity(), "add worker has been success", Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().beginTransaction().remove(AddWorker.this).commit();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // אם נכשל - מציג שגיאה
+                        Toast.makeText(getActivity(), "add student has been failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }

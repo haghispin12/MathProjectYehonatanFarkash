@@ -85,7 +85,7 @@ popAllworkersFromFiresroe();
 
     //פעולה שמביאה מהשרת את הנתונים
     private void popAllworkersFromFiresroe() {
-        // קריאה לשרת ושליפה מהקלקציה הנכונה ומבקשים את הנתונים
+        // קריאה לשרת ושליפה מהקולקציה הנכונה ומבקשים את הנתונים
         FirebaseFirestore.getInstance().collection("workers")
                 .get()
                 .addOnCompleteListener(task -> {

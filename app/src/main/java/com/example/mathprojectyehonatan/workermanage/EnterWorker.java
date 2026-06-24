@@ -47,19 +47,29 @@ public class EnterWorker extends AppCompatActivity {
     com.google.mlkit.vision.text.TextRecognizer recognizer;
 
     // מנגנון חכם להפעלת המצלמה וקבלת התוצאה (התמונה) בחזרה לקוד
+    // הגדרת משגר פעולה (Launcher) בשיטה המודרנית של Jetpack (מחליף את השיטה הישנה).
+// הרישום מתבצע לפני פתיחת המצלמה, מה ששומר על בטיחות בניהול הזיכרון.
     public ActivityResultLauncher<Intent> startCamera = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    // בדיקה אם פעולת הצילום הצליחה והמשתמש לא ביטל באמצע
+
+                    // בדיקה אם המשתמש צילם ואישר את התמונה (RESULT_OK).
+                    // אם המשתמש ביטל את הפעולה, הקוד בבלוק הזה לא ירוץ.
                     if (result.getResultCode() == RESULT_OK) {
-                        // בדיקה שנתיב שמירת התמונה קיים ותקין בזיכרון
+
+                        // בדיקה קריטית: וודא שכתובת הקובץ (URI) עדיין קיימת בזיכרון.
+                        // במקרים נדירים (כמו סיבוב מסך), משתנים עלולים להתאפס והבדיקה מונעת קריסה.
                         if (uri != null) {
-                            Log.d("OCR_Test", "התמונה נשמרה במיקום: " + uri.toString());
-                            // הפעלת פונקציית הסריקה הראשי ושליחת נתיב התמונה אליה
+                            Log.d("OCR_Test", "התמונה נשמרה ב: " + uri.toString());
+
+                            // שליחת נתיב התמונה לפונקציית העיבוד והסריקה.
+                            // המערכת ניגשת לקובץ בזיכרון ומנתחת אותו.
                             scanBarcodeFromUri(uri);
+
                         } else {
+                            // טיפול בשגיאה: המצלמה אישרה, אך נתיב הקובץ לא נמצא.
                             Toast.makeText(EnterWorker.this, "שגיאה: מיקום התמונה לא נמצא", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -131,7 +141,7 @@ public class EnterWorker extends AppCompatActivity {
             public void onClick(View v) {
                 // אבטחה: מוודאים שיש לנו את מזהה העובד בזיכרון לפני שמנסים לעדכן את הענן
                 if (currentWorkerDocId != null) {
-                    // קריאה לפונקציית הרישום החכמה ושליחת הנתונים אליה
+                    // קריאה לפונקציית הרישום ושליחת הנתונים אליה
                     registerWorkerEntry(currentWorkerDocId, currentWorkerName);
                 } else {
                     Toast.makeText(EnterWorker.this, "אנא סרוק תעודת זהות תחילה!", Toast.LENGTH_SHORT).show();
@@ -161,9 +171,11 @@ public class EnterWorker extends AppCompatActivity {
 
             // שליחת התמונה לפונקציה הרקורסיבית החכמה, מתחילים מזווית 0 (הזווית המקורית)
             tryRecognizeWithRotation(bitmap, 0);
-
+// תפיסת כל שגיאה לא צפויה שעלולה לקרות במהלך הניסיון לטעון את הקובץ
         } catch (Exception e) {
+            // הדפסת פרטי השגיאה ב-Logcat לצורך אבחון וניפוי באגים
             e.printStackTrace();
+            // הצגת הודעה ברורה למשתמש על הכישלון בטעינת הקובץ
             Toast.makeText(this, "שגיאה בטעינת הקובץ: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -195,7 +207,7 @@ public class EnterWorker extends AppCompatActivity {
                     // שליחת כל הטקסט שחולץ מהתעודה לבדיקה וסינון מספר הזהות החוקי
                     String tzNumber = extractTzNumber(fullText);
 
-                    // אם נמצא מספר תעודת זהות חוקי (שעבר בהצלחה את אלגוריתם לון של משרד הפנים)
+                    // אם נמצא מספר תעודת זהות חוקי (שעבר בהצלחה את האלגוריתם לון של משרד הפנים)
                     if (tzNumber != null) {
                         Log.d("OCR_Test", "הצלחה! נמצאה תעודת זהות מאומתת: " + tzNumber);
                         // מעבר לשלב הבא והאחרון: בדיקת קיום העובד בתוך ה-Database בענן של Firestore
@@ -233,13 +245,20 @@ public class EnterWorker extends AppCompatActivity {
 
             // הרצת אלגוריתם לון הרשמי: האם זה מספר תעודת זהות אמיתית ותקנית, או מספר כרטיס אקראי?
             if (isValidIsraeliID(candidate)) {
-                return candidate; // בינגו! מצאנו את מספר הזהות האמיתי. נחזיר אותו מיד ונעצור את החיפוש
+                return candidate; // אם מצאנו את מספר הזהות האמיתי. נחזיר אותו מיד ונעצור את החיפוש
             }
         }
         return null; // אם סרקנו את כל המספרים בתמונה ואף אחד מהם לא היה ת"ז חוקית ומאומתת
     }
 
     // אלגוריתם לון (Luhn Check Digit) הרשמי המשמש את משרד הפנים לבדיקת תקינות מתמטית של תעודות זהות
+    /**
+     * בודקת האם מספר תעודת הזהות הישראלי שהתקבל הוא תקין.
+     * הפונקציה מבצעת אימות לפי "אלגוריתם ספרת הביקורת" המקובל בישראל:
+     * 1. מוודאת אורך של 9 ספרות.
+     * 2. מבצעת שקלול של הספרות לפי מיקומן.
+     * 3. מוודאת שסכום הביקורת מתחלק ב-10 ללא שארית.
+     */
     private boolean isValidIsraeliID(String id) {
         // תעודת זהות ישראלית חייבת להכיל בדיוק 9 ספרות
         if (id == null || id.length() != 9) return false;
@@ -378,8 +397,7 @@ public class EnterWorker extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     // נעילת הכפתורים לאחר ביצוע מוצלח (כדי למנוע לחיצות כפולות)
                     btnEntereWorker.setEnabled(false);
-                    btnExitWorker.setEnabled(false); // שים לב לשנות כאן לשם של משתנה כפתור היציאה שלך במידת הצורך
-
+                    btnExitWorker.setEnabled(false);
                     Toast.makeText(this, "יציאת העובד נרשמה בהצלחה בשעה: " + currentTime, Toast.LENGTH_SHORT).show();
 
                     // איפוס המשתנים כדי להיות מוכנים לסריקה הבאה
